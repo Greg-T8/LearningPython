@@ -4,5 +4,6 @@
 
 ## Resources
 - [Book Code](https://learning-python.com/LP6E-code)
+- [Python Documentation](https://docs.python.org/3/)
 
-##
+## Introduction

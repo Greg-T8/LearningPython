@@ -17,3 +17,6 @@ def check_age():
 # Main program
 greet_user()
 check_age()
+
+print("Thank you for using the greeting program!")
+

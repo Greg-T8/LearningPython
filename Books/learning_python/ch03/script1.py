@@ -3,6 +3,7 @@
 # Author:  Greg Tate
 # Date:    2024-04-27
 # Synopsis: Prints the current platform, computes 2 to the power of 100, and repeats a string multiple times.
+
 import sys
 print(sys.platform)
 print(2 ** 100)

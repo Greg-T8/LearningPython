@@ -67,29 +67,29 @@ Slicing allows you to extract a section, providing everything from the start ind
 ```python
 >>> S
 'Code'
->>> S[1:3]		# Slicing from index 1 to 2 (3 is excluded)
+>>> S[1:3]        # Slicing from index 1 to 2 (3 is excluded)
 'od'
 ```
 - The left bound defaults to 0 and the right bound defaults to the length of the sequence being sliced:
 ```python
 >>> S
 'Code'
->>> S[1:]			# Slicing from index 1 to the end of the string
+>>> S[1:]          # Slicing from index 1 to the end of the string
 'ode'
->>> S[0:3] 		# Slicing from index 0 to 2 (3 is excluded)
+>>> S[0:3]         # Slicing from index 0 to 2 (3 is excluded)
 'Cod'
->>> S[:3]			# Slicing from index 0 to 2 (3 is excluded)
+>>> S[:3]          # Slicing from index 0 to 2 (3 is excluded)
 'Cod'
->>> S[:-1]		# Slicing from index 0 to -1 (last character excluded)
+>>> S[:-1]         # Slicing from index 0 to -1 (last character excluded)
 'Cod'
->>> S[:]			# Slicing from index 0 to the end of the string
+>>> S[:]           # Slicing from index 0 to the end of the string
 'Code'
 ```
 Strings also support concatenation and repetition: 
 ```python
 >>> S
 'Code'
->>> S + 'xyz'		# S remains unchanged
+>>> S + 'xyz'        # S remains unchanged
 'Codexyz'
 >>> S
 'Code'
@@ -161,21 +161,58 @@ Note the original string remains unchanged.
 Other methods:
 ```py
 >>> line = 'aaa,bbb,cccc,dd'
->>> line.split(',')										# Splits the string on a delimiter into a list of substrings
+>>> line.split(',')                   # Splits the string on a delimiter into a list of substrings
 ['aaa', 'bbb', 'cccc', 'dd']
 
 >>> S = 'code'
->>> S.upper()													# Upper- and lowercase conversions
+>>> S.upper()                         # Upper- and lowercase conversions
 'CODE'
 
->>> S.isalpha()												# Content tests: isalpha, isdigit, etc.
+>>> S.isalpha()                       # Content tests: isalpha, isdigit, etc.
 True
 
 >>> line = 'aaa,bbb,cccc,dd\n'
->>> line.rstrip()											# Remove whitespace from the right side of the string
+>>> line.rstrip()                     # Remove whitespace from the right side of the string
 'aaa,bbb,cccc,dd'
 
 >>> line = 'aaa,bbb,cccc,dd\n'
->>> line.rstrip().split(',')					# Combining two operations, left to right
+>>> line.rstrip().split(',')          # Combining two operations, left to right
 ['aaa', 'bbb', 'cccc', 'dd']
 ```
+
+Three formatting operations are available: 
+```py
+>>> 'Using %s version %s.%s' % (tool, major, minor + 9)       # Format expression, known as the old-style string formatting
+'Using Python version 3.12'
+
+>>> 'Using {} version {}.{}'.format(tool, major, minor + 9)   # Format method, newer
+'Using Python version 3.12'
+
+>>> f'Using {tool} version {major}.{minor + 9}'               # f-string, the newest
+'Using Python version 3.12'
+```
+All three methods resolve substitution values and build new strings when they are run.
+
+Each form is rich with features and matter most when generating readable output and numeric reports:
+
+```py
+>>> '%.2f | %+05d' % (3.14159, -62)                   # Digits, signs, padding
+'3.14 | -0062'
+
+>>> '{1:,.2f} | {0}'.format('sapp'[1:], 29699.256)    # Commas, decimal digits
+'29,699.26 | app'
+
+>>> f'{296999.256:,.2f} | {'sapp'[1:]}'               # Ditto, with nested quotes
+'296,999.26 | app'
+```
+
+#### Getting Help
+
+Use the built-in `dir()` function to list the attributes of an object: 
+```py
+>>> S = 'Code'
+>>> dir(S)
+['__add__', '__class__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getnewargs__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mod__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmod__', '__rmul__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'capitalize', 'casefold', 'center', 'count', 'encode', 'endswith', 'expandtabs', 'find', 'format', 'format_map', 'index', 'isalnum', 'isalpha', 'isascii', 'isdecimal', 'isdigit', 'isidentifier', 'islower', 'isnumeric', 'isprintable', 'isspace', 'istitle', 'isupper', 'join', 'ljust', 'lower', 'lstrip', 'maketrans', 'partition', 'removeprefix', 'removesuffix', 'replace', 'rfind', 'rindex', 'rjust', 'rpartition', 'rsplit', 'rstrip', 'split', 'splitlines', 'startswith', 'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill']
+```
+
+

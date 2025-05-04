@@ -10,6 +10,12 @@
 
 </details>
 
+- [Part II. Objects and Operations](#part-ii-objects-and-operations)
+  - [4. Introducing Python Objects](#4-introducing-python-objects)
+    - [Strings](#strings)
+    - [Lists](#lists)
+
+
 ## Part II. Objects and Operations
 
 ### 4. Introducing Python Objects

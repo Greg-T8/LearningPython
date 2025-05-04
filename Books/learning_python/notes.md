@@ -140,3 +140,42 @@ bytearray(b'application')
 >>> B.decode()
 'application'
 ```
+> A `bytearray` is a mutable sequence of bytes--essentially, it's like a list of bytes that you can modify.
+
+#### Type-Specific Methods
+
+The `find()` and `replace()` methods are used to search and replace substrings in strings: 
+```py
+>>> S = 'Code'
+>>> S.find('od')
+1
+>>> S
+'Code'
+>>> S.replace('od', 'abl')
+'Cable'
+>>> S
+'Code'
+```
+Note the original string remains unchanged. 
+
+Other methods:
+```py
+>>> line = 'aaa,bbb,cccc,dd'
+>>> line.split(',')										# Splits the string on a delimiter into a list of substrings
+['aaa', 'bbb', 'cccc', 'dd']
+
+>>> S = 'code'
+>>> S.upper()													# Upper- and lowercase conversions
+'CODE'
+
+>>> S.isalpha()												# Content tests: isalpha, isdigit, etc.
+True
+
+>>> line = 'aaa,bbb,cccc,dd\n'
+>>> line.rstrip()											# Remove whitespace from the right side of the string
+'aaa,bbb,cccc,dd'
+
+>>> line = 'aaa,bbb,cccc,dd\n'
+>>> line.rstrip().split(',')					# Combining two operations, left to right
+['aaa', 'bbb', 'cccc', 'dd']
+```

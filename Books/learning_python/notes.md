@@ -10,15 +10,17 @@
 
 </details>
 
-## Objects and Operations
+## Part II. Objects and Operations
 
-### The Python Conceptual Hierarchy
+### 4. Introducing Python Objects
+
+**The Python Conceptual Hierarchy**:  
 1. Programs are composed of modules.
 2. Modules contain statements.
 3. Statements contain expressions.
 4. Expressions create and process objects.
 
-#### Python's Core Object Types
+**Python's Core Object Types**:  
 
 | Object type            | Example literals/creation                                         |
 | ---------------------- | ----------------------------------------------------------------- |
@@ -33,11 +35,11 @@
 | Program-unit objects   | `Functions`, `modules`, `classes`                                 |
 | Implementation objects | `Compiled code`, `stack tracebacks`                               |
 
-##### Strings
+#### Strings
 
-###### Sequence Operations
+##### Sequence Operations
 
-- Python allows referencing index positions in strings using square brackets `[]`.
+Python allows referencing index positions in strings using square brackets `[]`:  
 ```python
 >>> S = 'Code'
 >>> len(S)
@@ -48,28 +50,27 @@
 'o'
 >>> 
 ```
-- You can also index backwards using negative numbers.
+You can also index backwards using negative numbers:
 ```python
 >>> S[-1]
 'e'
 >>> S[-2]
 'd'
 ```
-- More formally, a negative index is added to the length of the string to yield a positive offset.
+More formally, a negative index is added to the length of the string to yield a positive offset:
 ```python
 >>> S[-1]
 'e'
 >>> S[len(S)-1]
 'e'
-```
-- Slicing allows you to extract a section, providing everything from the start index up to but not including the end index.
+Slicing allows you to extract a section, providing everything from the start index up to but not including the end index:
 ```python
 >>> S
 'Code'
 >>> S[1:3]		# Slicing from index 1 to 2 (3 is excluded)
 'od'
 ```
-- The left bound defaults to 0 and the right bound defaults to the length of the sequence being sliced.
+- The left bound defaults to 0 and the right bound defaults to the length of the sequence being sliced:
 ```python
 >>> S
 'Code'
@@ -84,7 +85,7 @@
 >>> S[:]			# Slicing from index 0 to the end of the string
 'Code'
 ```
-- Strings also support concatenation and repetition.
+Strings also support concatenation and repetition: 
 ```python
 >>> S
 'Code'
@@ -96,9 +97,9 @@
 'CodeCodeCodeCodeCodeCodeCodeCode'
 ```
 
-###### Immutability
+##### Immutability
 
-- Strings are immutable, meaning they cannot be changed in place.
+Strings are immutable, meaning they cannot be changed in place: 
 ```python
 >>> S
 'Code'
@@ -109,17 +110,18 @@ Traceback (most recent call last):
     ~^^^
 TypeError: 'str' object does not support item assignment
 ```
-- You can, however, run expressions to make new objects.
+You can, however, run expressions to make new objects:
 ```python
 >>> S = 'Z' + S[1:]
 >>> S
 'Zode'
 ```
-- The following core object types are immutable:
-	- Strings
-	- Numbers
-	- Tuples
-- You can change text-based data in place if you use a mutable object type, such as a list.
+The following core object types are immutable:  
+- Strings
+- Numbers
+- Tuples
+
+You can change text-based data in place if you use a mutable object type, such as a list.
 ```python
 >>> S = 'Python'
 >>> L = list(S)
@@ -129,7 +131,7 @@ TypeError: 'str' object does not support item assignment
 >>> ''.join(L)
 'Cython'
 ```
-- The following example shows you can use a `bytearray`  to support in-place changes.
+The following example shows you can use a `bytearray`  to support in-place changes: 
 ```python
 >>> B = bytearray(b'app')
 >>> B.extend(b'lication')

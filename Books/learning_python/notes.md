@@ -426,4 +426,52 @@ List comprehensions are composed of an expression and a looping construct:
 >>> [row[1] for row in M if row[1] % 2 == 0]
 [2, 8]
 ```
+Using a list comprehension to step over a hardcoded list of coordinates and a string:
+```py
+>>> diag = [M[i][i] for i in [0, 1, 2]]   # Collect a diagnonal from matrix
+>>> diag
+[1, 5, 9]
 
+>>> doubles = [c * 2 for c in 'hack']     # Repeat characters in a string
+>>> doubles
+['hh', 'aa', 'cc', 'kk']
+```
+
+Using a `range`:
+```py
+>>> list(range(4))                                            # Integers 0..(N-1)
+[0, 1, 2, 3]
+
+>>> list(range(-6, 7, 2))                                     # -6 to +6, by 2
+[-6, -4, -2, 0, 2, 4, 6]
+
+
+>>> [[x ** 2, x ** 3] for x in range(4)]                      # Multiple values, "if" filters
+[[0, 0], [1, 1], [4, 8], [9, 27]]
+
+>>> [[x, x // 2, x * 2] for x in range(-6, 7, 2) if x > 0]    # // means integer division
+[[2, 1, 4], [4, 2, 8], [6, 3, 12]]
+```
+
+Enclosing list comprehensions in parentheses creates a generator expression, which is an iterator that generates items on demand:
+```py
+>>> M
+[[1, 2, 3], [4, 5, 6], [7, 8, 9]] 
+
+>>> G = (sum(row) for row in M)   # Make a generator of row sums
+
+>>> next(G)
+6
+>>> next(G)
+15
+>>> next(G)
+24
+```
+Comprehension syntax can be used to create *sets* and *dictionaries* as well:
+```py
+>>> {sum(row) for row in M}           # Makes an unordered set of row sums
+{24, 6, 15}
+
+>>> {i: sum(M[i]) for i in range(3)}  # Makes a dictionary of row sums
+{0: 6, 1: 15, 2: 24}
+```

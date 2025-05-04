@@ -214,5 +214,64 @@ Use the built-in `dir()` function to list the attributes of an object:
 >>> dir(S)
 ['__add__', '__class__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getnewargs__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mod__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmod__', '__rmul__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'capitalize', 'casefold', 'center', 'count', 'encode', 'endswith', 'expandtabs', 'find', 'format', 'format_map', 'index', 'isalnum', 'isalpha', 'isascii', 'isdecimal', 'isdigit', 'isidentifier', 'islower', 'isnumeric', 'isprintable', 'isspace', 'istitle', 'isupper', 'join', 'ljust', 'lower', 'lstrip', 'maketrans', 'partition', 'removeprefix', 'removesuffix', 'replace', 'rfind', 'rindex', 'rjust', 'rpartition', 'rsplit', 'rstrip', 'split', 'splitlines', 'startswith', 'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill']
 ```
+Names without the underscores are all the callable methods on string objects. Names with the double underscores are used for operator overloading in classes.
 
+Example showing how concatenation ultimately works by calling the `__add__` method: 
+```py
+>>> S + 'head!'
+'Codehead!'
+
+>>> S .__add__('head!')
+'Codehead!'
+```
+
+The `dir()` function simply lists names. Use the `help()` function to get more information about a specific method: 
+```py
+>>> help(S.replace)
+Help on built-in function replace:
+
+replace(old, new, /, count=-1) method of builtins.str instance
+    Return a copy with all occurrences of substring old replaced by new.
+
+      count
+        Maximum number of occurrences to replace.
+        -1 (the default value) means replace all occurrences.
+
+    If the optional argument count is given, only the first count occurrences are
+    replaced.
+```
+
+#### Other Ways to Code Strings
+
+```py
+>>> S = 'A\nB\tC'   # Escapes: newline and tab
+>>> len(S)          # Each stands for one character
+5
+
+>>> S = 'A\0B\0C'   # \0 is a binary zero byte, does not terminate the string
+>>> len(S)          # Length remains 5, despite the nulls
+5
+
+>>> S
+'A\x00B\x00C'       # Nonprintables are displayed as \xNN hex escapes
+```
+
+Python supports multiline strings using triple quotes: 
+```py
+>>> msg = """
+... aaaaaaaaaaaa
+... bbb'''bbb""bb
+... ccccccccc
+... """
+
+>>> msg
+'\naaaaaaaaaaaa\nbbb\'\'\'bbb""bb\nccccccccc\n'
+```
+
+Python also supports raw strings, which do not interpret backslashes as escape characters.
+```py
+>>> msg = r'C:\Users\you\code'
+>>> msg
+'C:\\Users\\you\\code'
+```
 

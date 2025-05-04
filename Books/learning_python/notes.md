@@ -336,7 +336,7 @@ You can index and slice lists in the same way as strings:
 
 ##### Type-Specific Operations
 
-Unlike arrays in other languages, lists have no fixed size or type.
+Unlike arrays in other languages, lists have no fixed size or type and are mutable:
 ```py
 >>> L.append('Py')          # Growing: add to the end of the list
 >>> L
@@ -352,3 +352,78 @@ Unlike arrays in other languages, lists have no fixed size or type.
 >>> L
 [123, 'text']
 ```
+
+Other list methods:
+```py
+>>> M = ['bb', 'aa', 'cc']
+>>> M.sort()
+>>> M
+['aa', 'bb', 'cc']
+
+>>> M.reverse()
+>>> M
+['cc', 'bb', 'aa']
+```
+
+##### Bounds Checking
+
+Python does not allow you to index or assign to a list outside its bounds:
+```py
+>>> L
+[123, 'text', 'Py']
+
+>>> L[99]
+Traceback (most recent call last):
+  File "<python-input-49>", line 1, in <module>
+    L[99]
+    ~^^^^
+IndexError: list index out of range
+
+>>> L[99] = 1
+Traceback (most recent call last):
+  File "<python-input-51>", line 1, in <module>
+    L[99] = 1
+    ~^^^^
+IndexError: list assignment index out of range
+```
+To grow a list, use the `append()` method or make a new list.
+
+##### Nesting
+
+```py
+>>> M = [[1, 2, 3],                 # Create a 3 x 3 matrix as a nexted list
+... [4, 5, 6],
+... [7, 8, 9]]
+
+>>> M
+[[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+
+>>> M[1]                            # Get row 2
+[4, 5, 6]
+
+>>> M[1][2]                         # Get row 2, then get item 3 within that row
+6 
+```
+
+##### Comprehensions
+
+A *list comprehension expression* enable you to build a new list by running an expression on each item in a sequence:
+```py
+>>> col2 = [row[1] for row in M]      # Collect the items in column 2
+
+>>> col2
+[2, 5, 8]
+
+>>> M                                 # Original list remains unchanged
+[[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+```
+List comprehensions are composed of an expression and a looping construct:
+
+```py
+>>> [row[1] + 1 for row in M]
+[3, 6, 9]
+
+>>> [row[1] for row in M if row[1] % 2 == 0]
+[2, 8]
+```
+

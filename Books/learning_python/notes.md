@@ -142,7 +142,7 @@ bytearray(b'application')
 ```
 > A `bytearray` is a mutable sequence of bytes--essentially, it's like a list of bytes that you can modify.
 
-#### Type-Specific Methods
+##### Type-Specific Methods
 
 The `find()` and `replace()` methods are used to search and replace substrings in strings: 
 ```py
@@ -206,7 +206,7 @@ Each form is rich with features and matter most when generating readable output 
 '296,999.26 | app'
 ```
 
-#### Getting Help
+##### Getting Help
 
 Use the built-in `dir()` function to list the attributes of an object: 
 ```py
@@ -241,7 +241,7 @@ replace(old, new, /, count=-1) method of builtins.str instance
     replaced.
 ```
 
-#### Other Ways to Code Strings
+##### Other Ways to Code Strings
 
 ```py
 >>> S = 'A\nB\tC'   # Escapes: newline and tab
@@ -275,7 +275,7 @@ Python also supports raw strings, which do not interpret backslashes as escape c
 'C:\\Users\\you\\code'
 ```
 
-#### Unicode Strings
+##### Unicode Strings
 
 ```py
 >>> 'hÄck'      # Normal strings are Unicode text
@@ -304,4 +304,51 @@ In text strings, each of these forms specify Unicode code points. By contrast, b
 ```py
 >>> '\u00A3', '\u00A3'.encode('latin1'), b'\xA3'.decode('latin1')
 ('£', b'\xa3', '£')
+```
+
+#### Lists
+
+##### Sequence Operations
+
+```py
+>>> L = [123, 'text', 1.23]   # A list of different-type objects
+>>> len(L)
+3
+```
+
+You can index and slice lists in the same way as strings: 
+```py
+>>> L[0]                                    # Indexing by position (offset)
+123
+
+>>> L[:-1]                                  # Slicing from index 0 to -1 (last item excluded)
+[123, 'text']
+
+>>> L + [4, 5, 6]                           # Concatenation of two lists
+[123, 'text', 1.23, 4, 5, 6]
+
+>>> L * 2                                   # Repetition of a list
+[123, 'text', 1.23, 123, 'text', 1.23]
+
+>>> L 
+[123, 'text', 1.23]                         # Original list remains unchanged
+```
+
+##### Type-Specific Operations
+
+Unlike arrays in other languages, lists have no fixed size or type.
+```py
+>>> L.append('Py')          # Growing: add to the end of the list
+>>> L
+[123, 'text', 1.23, 'Py']
+
+>>> L.pop(2)                # Shrinking: remove and return the item at index 2
+1.23
+
+>>> L                       # Original list is changed in place
+[123, 'text', 'Py']
+
+>>> del L[2]                # Shrinking: remove the item at index 2
+>>> L
+[123, 'text']
 ```

@@ -275,3 +275,33 @@ Python also supports raw strings, which do not interpret backslashes as escape c
 'C:\\Users\\you\\code'
 ```
 
+#### Unicode Strings
+
+```py
+>>> 'hÄck'      # Normal strings are Unicode text
+'hÄck'
+>>> b'a\x01c'   # Bytes are binary data, not Unicode text
+b'a\x01c'
+``` 
+Python's byte strings are sequences of 8-bit *bytes* that print with ASCII characters when possible. Python's text strings are sequences of *Unicode code points*, which do not map to single bytes store in memory or encoded in files.
+
+```py
+>>> 'Code'                        # Characters may be any size in memory
+'Code'
+>>> 'Code'.encode('utf-8')        # Encoded to 4 bytes in UTF-8 in files
+b'Code'
+>>> 'Code'.encode('utf-16')       # Encoded to 10 bytes in UTF-16 in files
+b'\xff\xfeC\x00o\x00d\x00e\x00' 
+```
+
+To code non-ASCII characters, use `\x` hexadecimal escapes; short `\u` or long `\U` Unicode escapes:
+```py
+>>> 'h\xc4\u00c4\U000000c4Äck'
+'hÄÄÄÄck'
+```
+In text strings, each of these forms specify Unicode code points. By contrast, byte strings use only `\x` hexadecimal escapes to embed the values of *raw* bytes.
+
+```py
+>>> '\u00A3', '\u00A3'.encode('latin1'), b'\xA3'.decode('latin1')
+('£', b'\xa3', '£')
+```

@@ -30,7 +30,10 @@
     - [Dictionaries](#dictionaries)
       - [Mapping Operations](#mapping-operations)
       - [Nesting Revisited](#nesting-revisited)
-      - [Missing Keys: if Tests](#missing-keys-if-tests)
+      - [Missing Keys: `if` Tests](#missing-keys-if-tests)
+      - [Item Iteration: `for` Loops](#item-iteration-for-loops)
+    - [Tuples](#tuples)
+      - [Why Tuples?](#why-tuples)
 
 
 ## Part II. Objects and Operations
@@ -575,7 +578,7 @@ In lower-level languages, you would have to allocate *memory* space for objects 
 >>> rec = 0     # Now the prior object's space is reclaimed
 ```
 
-##### Missing Keys: if Tests
+##### Missing Keys: `if` Tests
 
 Dictionaries also support type-specific operations with *methods*:
 
@@ -615,3 +618,129 @@ You can also use the `get()` method to return a default value if the key is miss
 0
 ```
 
+##### Item Iteration: `for` Loops
+
+Use the `keys`, `values`, or `items` methods to get the keys, values, or key-value pairs:
+
+```py
+>>> D = dict(a=1, b=2, c=3)
+>>> D
+{'a': 1, 'b': 2, 'c': 3}
+
+>>> list(D.keys())
+['a', 'b', 'c']
+
+>>> list(D.values())
+[1, 2, 3]
+
+>>> list(D.items())
+[('a', 1), ('b', 2), ('c', 3)]
+```
+
+You dcan use an iterator to step through the keys, values, or items:
+```py
+>>> D.keys()                    # Get an iterable object
+dict_keys(['a', 'b', 'c'])
+
+>>> I = iter(D.keys())          # Get an iterator from an iterable
+
+>>> next(I)                     # Get one result at a time from iterator
+'a'
+>>> next(I)                     
+'b'
+```
+Iterators are useful because they can save memory by not producing all their results at once.
+
+You can usually forget the iterator details by using a `for` loop:
+```py
+>>> for key in D.keys():                # Auto run the iteration protocol
+...        print(key, '=>', D[key])     # Display multiple items, space between
+... 
+a => 1
+b => 2
+c => 3
+```
+
+The `for` loop can help you step through keys implicitly as well as key/value pairs:
+
+```py
+>>> for key in D:                       # Implicit keys() iteration
+...        print(key, '=>', D[key])
+... 
+a => 1
+b => 2
+c => 3
+
+>>> for (key, value) in D.items():      # Key/value-pair tuples iteration
+...        print(key, '=>', value)
+... 
+a => 1
+b => 2
+c => 3
+```
+
+#### Tuples
+
+Tuples are sequences, like lists, but are immutable, like strings. Functionally, they're used to represnet fixed collections of items. Syntatically, they are coded using parentheses `()` instead of square brackets `[]`:
+
+```py
+>>> T = (1, 2, 3, 4)        # A 4-item tuple
+>>> len(T)
+4
+
+>>> T + (5, 6)              # Concatenation: a new tuple
+(1, 2, 3, 4, 5, 6)
+
+>>> T[0], T[1:]             # Indexing, slicing, and more
+(1, (2, 3, 4))
+```
+
+Tuples have type-specific callable methods, but not nearly as many as lists:
+
+```py
+>>> T.index(4)      # Tuple methods: 4 appears at offset 3
+3
+
+>>> T.count(4)      # 4 appears once
+1
+```
+
+Tuples cannot be changed once created. One-item tuples require a trailing comma:
+
+```py
+>>> T[0] = 2                    # Tuples are immutable
+Traceback (most recent call last):
+  File "<python-input-109>", line 1, in <module>
+    T[0] = 2
+    ~^^^
+TypeError: 'tuple' object does not support item assignment
+
+>>> T = (2,) + T[1:]            # One-item tuples require a trailing comma
+>>> T
+(2, 2, 3, 4)
+```
+
+Like lists and dictionaries, tuples suport mixed types and nesting, but they don't grow and shrink like lists nad dictionaries because they are immutable:
+
+```py
+>>> T = 'hack', 3.0, [11, 22, 33]
+>>> T
+('hack', 3.0, [11, 22, 33])
+
+>>> T[1]
+3.0
+>>> T[2][1]
+22
+
+>>> T.append(4)
+Traceback (most recent call last):
+  File "<python-input-120>", line 1, in <module>
+    T.append(4)
+    ^^^^^^^^
+```
+
+##### Why Tuples?
+
+Tuples are not used as often as lists, but their immutablility is the whole point. 
+
+Tuples provide an integrity constraint that is convenient in larger programs: if you pass a collection of objects around as a list, it can be changed anywhere; if you use a tuple, it can't be changed.

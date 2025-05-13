@@ -30,6 +30,7 @@
     - [Dictionaries](#dictionaries)
       - [Mapping Operations](#mapping-operations)
       - [Nesting Revisited](#nesting-revisited)
+      - [Missing Keys: if Tests](#missing-keys-if-tests)
 
 
 ## Part II. Objects and Operations
@@ -573,3 +574,44 @@ In lower-level languages, you would have to allocate *memory* space for objects 
 ```py
 >>> rec = 0     # Now the prior object's space is reclaimed
 ```
+
+##### Missing Keys: if Tests
+
+Dictionaries also support type-specific operations with *methods*:
+
+```py
+>>> D = {'a': 1, 'b': 2, 'c': 3}        # Assigning new keys grows dictionaries
+>>> D['d'] = 4
+>>> D
+{'a': 1, 'b': 2, 'c': 3, 'd': 4}
+
+>>> D['e']                              # Referencing a missing key raises an error
+Traceback (most recent call last):
+  File "<python-input-57>", line 1, in <module>
+    D['e']
+    ~^^^^^
+KeyError: 'e'
+```
+How do you handle such errors? 
+
+```py
+>>> 'e' in D
+False
+
+>>> if not 'e' in D:
+...    print('missing key!')
+... 
+missing key!
+```
+
+You can also use the `get()` method to return a default value if the key is missing:
+```py
+>>> D.get('a', 'missing')           # Like D['a'] but with a default value
+1
+>>> D.get('e', 'missing')           # Default returned if absent
+'missing'
+>>> 
+>>> D['e'] if 'e' in D else 0       # if/else ternary expression form
+0
+```
+

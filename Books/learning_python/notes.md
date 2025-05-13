@@ -10,10 +10,25 @@
 
 </details>
 
+<!-- omit in toc -->
+## Contents
 - [Part II. Objects and Operations](#part-ii-objects-and-operations)
-  - [4. Introducing Python Objects](#4-introducing-python-objects)
-    - [Strings](#strings)
-    - [Lists](#lists)
+	- [4. Introducing Python Objects](#4-introducing-python-objects)
+		- [Strings](#strings)
+			- [Sequence Operations](#sequence-operations)
+			- [Immutability](#immutability)
+			- [Type-Specific Methods](#type-specific-methods)
+			- [Getting Help](#getting-help)
+			- [Other Ways to Code Strings](#other-ways-to-code-strings)
+			- [Unicode Strings](#unicode-strings)
+		- [Lists](#lists)
+			- [Sequence Operations](#sequence-operations-1)
+			- [Type-Specific Operations](#type-specific-operations)
+			- [Bounds Checking](#bounds-checking)
+			- [Nesting](#nesting)
+			- [Comprehensions](#comprehensions)
+		- [Dictionaries](#dictionaries)
+			- [Mapping Operations](#mapping-operations)
 
 
 ## Part II. Objects and Operations
@@ -480,4 +495,46 @@ Comprehension syntax can be used to create *sets* and *dictionaries* as well:
 
 >>> {i: sum(M[i]) for i in range(3)}  # Makes a dictionary of row sums
 {0: 6, 1: 15, 2: 24}
+```
+
+#### Dictionaries
+
+Python dictionaries are the only core member of a category known as *mappings*. Mappings store objects by key instead of by relative position.
+
+Dictionaries are mutable: they may be changed in place and grow and shrink as needed.
+
+##### Mapping Operations
+
+```py
+>>> D = {'name': 'Pat', 'job': 'dev', 'age': 40}
+
+>>> D['name']
+'Pat'
+
+>>> D['job'] = 'mgr'
+>>> D
+{'name': 'Pat', 'job': 'mgr', 'age': 40}
+```
+
+It's more common to see dictionaries built up in different ways:
+
+```py
+>>> D = {}
+>>> D['name'] = 'Pat'
+>>> D['job'] = 'dev'
+>>> D['age'] = 40
+>>> D
+{'name': 'Pat', 'job': 'dev', 'age': 40}
+```
+
+There are also methods for passing to the `dict` type naem either *keyword arguments* or the result of *zipping* together sequences of keys and values:
+
+```py
+>>> pat1 = dict(name='Pat', job='dev', age=40)											# keywords
+>>> pat1
+{'name': 'Pat', 'job': 'dev', 'age': 40}
+
+>>> pat2 = dict(zip(['name', 'job', 'age'], ['Pat', 'dev', 40]))		# Zipping
+>>> pat2
+{'name': 'Pat', 'job': 'dev', 'age': 40}
 ```

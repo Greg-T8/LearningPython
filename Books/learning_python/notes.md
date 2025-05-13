@@ -13,22 +13,23 @@
 <!-- omit in toc -->
 ## Contents
 - [Part II. Objects and Operations](#part-ii-objects-and-operations)
-	- [4. Introducing Python Objects](#4-introducing-python-objects)
-		- [Strings](#strings)
-			- [Sequence Operations](#sequence-operations)
-			- [Immutability](#immutability)
-			- [Type-Specific Methods](#type-specific-methods)
-			- [Getting Help](#getting-help)
-			- [Other Ways to Code Strings](#other-ways-to-code-strings)
-			- [Unicode Strings](#unicode-strings)
-		- [Lists](#lists)
-			- [Sequence Operations](#sequence-operations-1)
-			- [Type-Specific Operations](#type-specific-operations)
-			- [Bounds Checking](#bounds-checking)
-			- [Nesting](#nesting)
-			- [Comprehensions](#comprehensions)
-		- [Dictionaries](#dictionaries)
-			- [Mapping Operations](#mapping-operations)
+  - [4. Introducing Python Objects](#4-introducing-python-objects)
+    - [Strings](#strings)
+      - [Sequence Operations](#sequence-operations)
+      - [Immutability](#immutability)
+      - [Type-Specific Methods](#type-specific-methods)
+      - [Getting Help](#getting-help)
+      - [Other Ways to Code Strings](#other-ways-to-code-strings)
+      - [Unicode Strings](#unicode-strings)
+    - [Lists](#lists)
+      - [Sequence Operations](#sequence-operations-1)
+      - [Type-Specific Operations](#type-specific-operations)
+      - [Bounds Checking](#bounds-checking)
+      - [Nesting](#nesting)
+      - [Comprehensions](#comprehensions)
+    - [Dictionaries](#dictionaries)
+      - [Mapping Operations](#mapping-operations)
+      - [Nesting Revisited](#nesting-revisited)
 
 
 ## Part II. Objects and Operations
@@ -530,11 +531,45 @@ It's more common to see dictionaries built up in different ways:
 There are also methods for passing to the `dict` type naem either *keyword arguments* or the result of *zipping* together sequences of keys and values:
 
 ```py
->>> pat1 = dict(name='Pat', job='dev', age=40)											# keywords
+>>> pat1 = dict(name='Pat', job='dev', age=40)                          # keywords
 >>> pat1
 {'name': 'Pat', 'job': 'dev', 'age': 40}
 
->>> pat2 = dict(zip(['name', 'job', 'age'], ['Pat', 'dev', 40]))		# Zipping
+>>> pat2 = dict(zip(['name', 'job', 'age'], ['Pat', 'dev', 40]))        # Zipping
 >>> pat2
 {'name': 'Pat', 'job': 'dev', 'age': 40}
+```
+**Note:** Starting with Python 3.7, dictionary keys retain their *insertion order*: the order of keys  is the order in which keys were added.
+
+##### Nesting Revisited
+
+
+```py
+>>> rec = {'name': {'first': 'Pat', 'last': 'Smith'},   # 'name' is a nested dictionary
+...        'jobs': ['dev', 'mgr'],
+...        'age': 40.5}
+
+>>> rec['name']                                         # Index the nested dictionary
+{'first': 'Pat', 'last': 'Smith'}
+
+>>> rec['name']['last']
+'Smith'
+
+>>> rec['jobs']                                         # 'jobs' is a nested list
+['dev', 'mgr']
+
+>>> rec['jobs'][-1]                                     # Index the nested list
+'mgr'
+
+>>> rec['jobs'].append('janitor')                       # Expand Pat's job description in place
+>>> rec
+{'name': {'first': 'Pat', 'last': 'Smith'}, 'jobs': ['dev', 'mgr', 'janitor'], 'age': 40.5}
+```
+
+Nesting in Python provides flexibility over C. Building a similar structure in C would require much more code: you would have to lay out and declare structures and arrays, fill out values, link everything together, and so on.
+
+In lower-level languages, you would have to allocate *memory* space for objects ahead of time and be careful to release it when you are done. In Python, object memory allotted as needed and freed when we lose the last reference to it&mdash;by assigning its variable to something else:
+
+```py
+>>> rec = 0     # Now the prior object's space is reclaimed
 ```

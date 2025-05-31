@@ -681,7 +681,13 @@ c => 3
 
 #### Tuples
 
-Tuples are sequences, like lists, but are immutable, like strings. Functionally, they're used to represnet fixed collections of items. Syntatically, they are coded using parentheses `()` instead of square brackets `[]`:
+Tuples are not used as often as lists, but their immutablility is the whole point. 
+
+Tuples provide an integrity constraint that is convenient in larger programs: if you pass a collection of objects around as a list, it can be changed anywhere; if you use a tuple, it can't be changed.
+
+Functionally, tuples are used to represent fixed collections of items: the components of a specific calendar date, the coordinates of a point in space, or the fields of a database record.
+
+Syntactically, tuples are coded using parentheses `()` instead of square brackets `[]`, which makes them easy to distinguish from lists. Tuples support arbitrary nesting, and the usual sequence operations, such as indexing, slicing, and concatenation.
 
 ```py
 >>> T = (1, 2, 3, 4)        # A 4-item tuple
@@ -740,44 +746,3 @@ Traceback (most recent call last):
 ```
 
 ##### Why Tuples?
-
-Tuples are not used as often as lists, but their immutablility is the whole point. 
-
-Tuples provide an integrity constraint that is convenient in larger programs: if you pass a collection of objects around as a list, it can be changed anywhere; if you use a tuple, it can't be changed.
-
-Functionally, tuples are used to represent fixed collections of items: the components of a specific calendar date, the coordinates of a point in space, or the fields of a database record.
-
-Syntactically, tuples are coded using parentheses `()` instead of square brackets `[]`, which makes them easy to distinguish from lists. Tuples support arbitrary nesting, and the usual sequence operations, such as indexing, slicing, and concatenation.
-
-```cmd
->>> T = (1, 2, 3, 4)    # A 4-item tuple
->>> len(T)              # Length
-4
-
->>> T + (5, 6)          # Concatenation: a new tuple
-(1, 2, 3, 4, 5, 6)
-
->>> T[0], T[1:]         # Indexing and slicing
-(1, (2, 3, 4))
-
->>> T.index(4)          # Tuple methods: 4 appears at offset 3
-3
-
->>> T.count(4)          # 4 appears once
-1
-```
-
-Tuples are immutable, so they cannot be changed once created:
-
-```cmd
->>> T[0] = 2
-Traceback (most recent call last):
-  File "<python-input-14>", line 1, in <module>
-    T[0] = 2
-    ~^^^
-TypeError: 'tuple' object does not support item assignment
-
->>> T = (2,) + T[1:]    # Make a new tuple for a new value
->>> T
-(2, 2, 3, 4)
-```

@@ -34,6 +34,7 @@
       - [Item Iteration: `for` Loops](#item-iteration-for-loops)
     - [Tuples](#tuples)
       - [Why Tuples?](#why-tuples)
+    - [Files](#files)
 
 
 ## Part II. Objects and Operations
@@ -681,10 +682,6 @@ c => 3
 
 #### Tuples
 
-Tuples are not used as often as lists, but their immutablility is the whole point. 
-
-Tuples provide an integrity constraint that is convenient in larger programs: if you pass a collection of objects around as a list, it can be changed anywhere; if you use a tuple, it can't be changed.
-
 Functionally, tuples are used to represent fixed collections of items: the components of a specific calendar date, the coordinates of a point in space, or the fields of a database record.
 
 Syntactically, tuples are coded using parentheses `()` instead of square brackets `[]`, which makes them easy to distinguish from lists. Tuples support arbitrary nesting, and the usual sequence operations, such as indexing, slicing, and concatenation.
@@ -746,3 +743,36 @@ Traceback (most recent call last):
 ```
 
 ##### Why Tuples?
+
+Tuples are not used as often as lists, but their immutablility is the whole point. 
+
+Tuples provide an integrity constraint that is convenient in larger programs: if you pass a collection of objects around as a list, it can be changed anywhere; if you use a tuple, it can't be changed.
+
+#### Files
+
+To create a file object, use the built-in `open()` function, which returns a file object that can be used to read or write data:
+
+```py
+>>> f = open('data.txt', 'w')   # Open a new file in text-output mode; create if it doesn't exist
+>>> f.write('Hello\n')          # Write strings of characters to it
+6
+>>> f.write('world!\n')         # Return number of items written
+7
+>>> f.close()                   # Close to flush output buffers to disk
+```
+
+You can use the `r` mode to read from a file. A file's content is always a string, regardless of the type of data it contains:
+
+```py
+>>> f = open('data.txt')        # Open an existing file in text-input mode
+>>> text = f.read()             # Read entire file into a string
+>>> text
+'Hello\nWorld!\n'
+
+>>> print(text)                 # print interprets control characters
+Hello
+World!
+
+>>> text.split()                # File content is always a string
+['Hello', 'World!']
+```

@@ -35,6 +35,7 @@
     - [Tuples](#tuples)
       - [Why Tuples?](#why-tuples)
     - [Files](#files)
+      - [Unicode and Byte Files](#unicode-and-byte-files)
 
 
 ## Part II. Objects and Operations
@@ -761,7 +762,7 @@ To create a file object, use the built-in `open()` function, which returns a fil
 >>> f.close()                   # Close to flush output buffers to disk
 ```
 
-You can use the `r` mode to read from a file. A file's content is always a string, regardless of the type of data it contains:
+You can use the `r` mode to read from a file, which is also the default if you omit the mode in the call. A file's content is always a string, regardless of the type of data it contains:
 
 ```py
 >>> f = open('data.txt')        # Open an existing file in text-input mode
@@ -775,4 +776,42 @@ World!
 
 >>> text.split()                # File content is always a string
 ['Hello', 'World!']
+```
+
+Though, the best way to read a text file is usually not to read it all&mdash;files support the *iteration protocol* with an iterator that automatically reads line by line in `for` loops:
+
+```py
+>>> for line in open('data.txt'):       # Display lines in a file
+...     print(line.rstrip())            # Single spaced (sans \n)
+...
+Hello
+World!
+```
+
+##### Unicode and Byte Files
+
+Python text files always use Unicode encoding to encode strings on writes and decode strings on reads. However, binary files, which are useful for processing non-text data, e.g. media, data created by C programs, and so on, are also supported.
+
+```py
+>>> bf = open('data.bin', 'wb')         # Open a new file in binary-output mode
+>>> bf.write(b'h\xFFa\xEEc\xDDk\n')     # Write binary data to it
+8
+
+>>> bf.close()                          
+>>> open('data.bin', 'rb').read()       # Read the file in binary-input mode
+b'h\xffa\xeec\xddk\n'
+```
+
+When it comes to text files, if you want your code to work across platforms, you should generally make encodings explicit to avoid surprises:
+
+```py
+>>> tf = open('unidata.txt', 'w', encoding='utf-8')
+>>> tf.write('\U0001f40d\u0068\u00c4\u0063\u006b\U0001f44f')    # Encodes to UTF-8
+6
+>>> tf.close()
+
+>>> open('unidata.txt', 'r', encoding='utf-8').read()           # Decodes from UTF-8
+'🐍hÄck👏'
+>>> open('unidata.txt', 'rb').read()                            # Raw encoded text
+b'\xf0\x9f\x90\x8dh\xc3\x84ck\xf0\x9f\x91\x8f'
 ```

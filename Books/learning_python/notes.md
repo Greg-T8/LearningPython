@@ -36,6 +36,11 @@
       - [Why Tuples?](#why-tuples)
     - [Files](#files)
       - [Unicode and Byte Files](#unicode-and-byte-files)
+    - [Other Object Types](#other-object-types)
+      - [Sets](#sets)
+      - [Booleans and None](#booleans-and-none)
+      - [Types](#types)
+      - [Type Hinting](#type-hinting)
 
 
 ## Part II. Objects and Operations
@@ -815,3 +820,108 @@ When it comes to text files, if you want your code to work across platforms, you
 >>> open('unidata.txt', 'rb').read()                            # Raw encoded text
 b'\xf0\x9f\x90\x8dh\xc3\x84ck\xf0\x9f\x91\x8f'
 ```
+
+While files automate most encodings, you can also encode and decode manually if your program gets Unicode data from another source&mdash;parsed from an email message or fetched over a network connection, for example:
+
+```py
+>>> 'hÄck'.encode('utf-8')
+b'h\xc3\x84ck'
+
+>>> b'h\xc3\x84ck'.decode('utf-8')
+'hÄck'
+```
+
+#### Other Object Types
+
+##### Sets
+
+Python sets are unordered collections of immutable (technically "hashable") objects, which store each object just once. You create sets by using the built-in `set` function:
+
+```py
+>>> X = set('hack')                     # Sequence => set
+>>> Y = {'a', 'p', 'p'}                 # Set literal
+>>> X, Y
+({'c', 'k', 'a', 'h'}, {'p', 'a'})
+
+>>> X & Y, X | Y                        # Intersection, union
+({'a'}, {'c', 'a', 'h', 'k', 'p'})
+
+>>> X - Y, X > Y                        # Difference, superset
+({'c', 'k', 'h'}, False)
+```
+
+Sets are useful for filtering out duplicates, isolating differences, and performing order-neutral equality tests without sorting:
+
+```py
+>>> list(set([3, 1, 2, 1, 3, 1]))       # Remove duplicates
+[1, 2, 3]
+
+>>> set('code') - set('hack')           # Collection difference
+{'e', 'd', 'o'}
+
+>>> set('code') == set('deoc')          # Order-neutral equality
+True
+```
+
+##### Booleans and None
+
+Python Booleans are predefined `True` and `False` objects that are essentially integers 1 and 0, respectively with custom display logic. There is also a special placeholder object called `None`, which is used to initialize names and objects and designate an absence of a result in functions:
+
+```py
+>>> 1 > 2, 1 < 2            # Booleans
+(False, True)
+
+>>> bool('hack')            # All objects have a Boolean value
+True                        # Nonempty means True
+
+>>> X = None                # None placeholder
+>>> print(X)                # But None is a thing
+None
+
+>>> L = [None] * 100        # Initialize a list with 100 None objects
+>>> L
+[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+
+```
+
+##### Types
+
+The `type` object, returned by the built-in `type()` function, is an object that gives the type of another object.
+
+```py
+>>> L = [1, 2, 3]
+
+>>> type(L)         # Tye type of a list object
+<class 'list'>
+
+>>> type(type(L))   # Even types are objects
+<class 'type'>
+```
+
+The `type` object allows you to check the types of the objects it processes:
+
+```py
+>>> type(L) == type([])     # Type testing using a real object
+True
+
+>>> type(L) == list         # Type testing using a type name
+True
+
+>>> isinstance(L, list)     # The object-oriented way to test types
+True
+```
+
+The author notes that type checking is not the "Pythonic" way to write code. Reason being is that type checking leads to code that is less flexible and more brittle, as it relies on specific types rather than the behavior of objects. Rather than checking types, Python encourages you to code to object interfaces, not to types. This means you should focus on what an object *does*, not what it *is*.
+
+##### Type Hinting
+
+Python has slowly accumulated a type-declaration facility known as *type hinting*, based on earlier function annotations and insipired by TypeScript.
+
+With these syntax and module extensions, it is possible to name expected object types of function arguments and results, attributes in class-based objects, and even simple variables.
+
+```py
+>>> x: int = 1          # Optional hint: x might be an integer
+>>> x = 'anything'      # But it doesn't have to be!
+```
+
+Type hinting is only meant for documentation and use by third-party tools, such as type checkers and IDEs. The Python language does not itself mandate or use type declarations.

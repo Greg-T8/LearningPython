@@ -41,6 +41,12 @@
       - [Booleans and None](#booleans-and-none)
       - [Types](#types)
       - [Type Hinting](#type-hinting)
+  - [5. Numbers and Expressions](#5-numbers-and-expressions)
+    - [Numeric Object Basics](#numeric-object-basics)
+      - [Numeric Literals](#numeric-literals)
+      - [Built-in Numeric Tools](#built-in-numeric-tools)
+    - [Python Expression Operators](#python-expression-operators)
+      - [Mixed Types Are Converted Up](#mixed-types-are-converted-up)
 
 
 ## Part II. Objects and Operations
@@ -925,3 +931,99 @@ With these syntax and module extensions, it is possible to name expected object 
 ```
 
 Type hinting is only meant for documentation and use by third-party tools, such as type checkers and IDEs. The Python language does not itself mandate or use type declarations.
+
+### 5. Numbers and Expressions
+
+This chapter begins the in-depth coverage of the Python language.
+
+#### Numeric Object Basics
+
+Python's numeric toolbox includes:
+- Integer and floating-point numbers
+- Complex number objects
+- Decimal and fixed-precision objects
+- Fraction rational number objects
+- Set objects and operations
+- Boolean and bitwise operations
+- Built-in modules, such as `math`, `cmath`, `random`, and `statistics`
+- Third-party add-ons, including vectors, visualization, plotting, and extended precision
+
+##### Numeric Literals
+
+| Literal                             | Interpretation                       |
+| ----------------------------------- | ------------------------------------ |
+| 1234, -24, 0, 9_999_999_999_999     | Integers (unlimited size)            |
+| 1.23, 1., 3.14e-10, 4E210, 4.0e+210 | Floating-point numbers               |
+| 0o177, 0x9ff, 0b101010              | Octal, hex, and binary literals      |
+| 3+4j, 3.0+4.0j, 3J                  | Complex number literals              |
+| set('hack'), {1, 2, 3, 4}           | Sets: constructors and literals      |
+| Decimal('1.0'), Fraction(1, 3)      | Decimal and fraction extension types |
+| bool(X), True, False                | Boolean type and constants           |
+
+##### Built-in Numeric Tools
+
+- Expression Operators: `+`, `-`, `*`, `/`, `>>`, `**`, `&`, `%`, etc.
+- Built-in mathematical functions: `pow`, `abs`, `round`, `int`, `hex`, `bin`, etc.
+- Utility modules: `random`, `math`, `statistics`, etc.
+
+#### Python Expression Operators
+
+The following list of operators is ordered by precedence. Operators lower in the table have higher precedence.
+
+| Operators                            | Description                                                       |
+| ------------------------------------ | ----------------------------------------------------------------- |
+| `yield x`, `yield from x`            | Generator function `send` protocol                                |
+| `x := y`                             | Assignment expression                                             |
+| `lambda args: expression`            | Anonymous function generation                                     |
+| `x if y else z`                      | Ternary selection (`x` is evaluated only if `y` is true)          |
+| `x or y`                             | Logical OR (`y` is evaluated only if `x` is false)                |
+| `x and y`                            | Logical AND (`y` is evaluated only if `x` is true)                |
+| `not x`                              | Logical negation                                                  |
+| `x in y`, `x not in y`               | Membership (iterables)                                            |
+| `x is y`, `x is not y`               | Object identity tests                                             |
+| `x < y`, `x <= y`, `x > y`, `x >= y` | Magnitude comparison, set subset and superset                     |
+| `x == y`, `x != y`                   | Value equality operators                                          |
+| `x \| y`                             | Bitwise OR, set union, dictionary merge                           |
+| `x ^ y`                              | Bitwise XOR, set symmetric difference                             |
+| `x & y`                              | Bitwise AND, set intersection                                     |
+| `x << y`, `x >> y`                   | Shift `x` left or right by `y` bits                               |
+| `x + y`                              | Addition, concatenation                                           |
+| `x - y`                              | Subtraction, set difference                                       |
+| `x * y`                              | Multiplication, repetition                                        |
+| `x % y`                              | Remainder, format                                                 |
+| `x / y`, `x // y`                    | Division: true and floor                                          |
+| `x @ y`                              | Matrix multiplication (unused by Python, i.e. you must implement) |
+| `-x`, `+x`, `~x`                     | Negation, identity, bitwise NOT (inversion)                       |
+| `x ** y`                             | Power (exponentiation)                                            |
+| `await x`                            | Await expression (async functions)                                |
+| `x[i]`                               | Indexing (sequence, mapping, others)                              |
+| `x[i:j:k]`                           | Slicing                                                           |
+| `x(...)`                             | Call (function, method, class, other callable)                    |
+| `x.attr`                             | Attribute reference                                               |
+| `(...)`                              | Tuple, expression, generator expression                           |
+| `[...]`                              | List, list comprehension                                          |
+| `{...}`                              | Dictionary, set, dictionary and set comprehensions                |
+
+**Note:** the Python no-ops character, `@`, is used to introduce function decorators, but not as an expression operator.
+
+##### Mixed Types Are Converted Up
+
+Operands in expresssions are converted up to the most complicated operand, and then math is performed on the operands.
+
+```py
+>>> 40 + 3.14       # Integer to float, float math/result
+43.14
+```
+
+You can call built-in functions to convert types manually:
+
+```py
+>>> int(3.1415)
+3
+>>> float(3)
+3.0
+```
+
+However, you usually don't need to do this because Python automatically converts up to the more complex type within an expression.
+
+Keep in mind that Python only does this for numeric objects in an expression. In general, Python does not convert across any other type boundaries automatically.

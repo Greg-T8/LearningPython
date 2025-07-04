@@ -50,6 +50,7 @@
       - [Preview: Operator Overloading and Polymorphism](#preview-operator-overloading-and-polymorphism)
     - [Numbers in Action](#numbers-in-action)
       - [Variables and Basic Expressions](#variables-and-basic-expressions)
+      - [Numeric Display Formats](#numeric-display-formats)
 
 
 ## Part II. Objects and Operations
@@ -1084,3 +1085,46 @@ Python performs *true* division, which always retains fractional remainders and 
 >>> b // (2.0 + a)
 0.0
 ```
+
+##### Numeric Display Formats
+
+The results of some expressions may look odd:
+
+```py
+>>> 1.1 + 2.2
+3.3000000000000003          # What's up with the 3 at the end?
+
+>>> print(1.1 + 2.2)
+3.3000000000000003
+```
+
+Reason has to do with limitations in floating-point representation and its inability to represent some values in a limited number of bits.
+
+You can force the issue with string formatting:
+
+```py
+>>> num = 1.1 + 2.2
+>>> num
+3.3000000000000003
+
+>>> '%e' % num                  # String-formatting expression
+'3.300000e+00'
+
+>>> '%.1f' % num                # Alternative floating-point format
+'3.3'
+
+>>> f'{num:e}', f'{num:.1f}'    # F-string formatting
+('3.300000e+00', '3.3')
+```
+
+**Note:** The default output format of interactive echoes and `print` correspond to the built-in `repr` and `str` functions:
+
+```py
+>>> repr('hack')        # Returns a developer-readable, i.e. "as-code form" string `repr`esentation of an object
+"'hack'"
+
+>>> str('hack')         # Returns a human-readable string `str`ing representation of an object
+'hack'
+```
+
+

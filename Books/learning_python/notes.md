@@ -47,6 +47,9 @@
       - [Built-in Numeric Tools](#built-in-numeric-tools)
     - [Python Expression Operators](#python-expression-operators)
       - [Mixed Types Are Converted Up](#mixed-types-are-converted-up)
+      - [Preview: Operator Overloading and Polymorphism](#preview-operator-overloading-and-polymorphism)
+    - [Numbers in Action](#numbers-in-action)
+      - [Variables and Basic Expressions](#variables-and-basic-expressions)
 
 
 ## Part II. Objects and Operations
@@ -1027,3 +1030,57 @@ You can call built-in functions to convert types manually:
 However, you usually don't need to do this because Python automatically converts up to the more complex type within an expression.
 
 Keep in mind that Python only does this for numeric objects in an expression. In general, Python does not convert across any other type boundaries automatically.
+
+##### Preview: Operator Overloading and Polymorphism
+
+All Python operators may be overloaded by Python classes and C extension types to work on objects you create. For example, objects coded with classes may be added or concatenated with `x + y` expressions, indexed with `x[i]`, and so on.
+
+#### Numbers in Action
+
+##### Variables and Basic Expressions
+
+```py
+>>> a = 3
+>>> b = 4
+
+>>> a + 1, a - 1            # Addition, subtraction
+(4, 2)
+
+>>> b * 3, b / 2            # Multiplication, division
+(12, 2.0)
+
+>>> a % 2, b ** 2           # Remainder, exponentiation
+(1, 16)
+
+>>> 4 + 4.0, 2.0 ** b       # Mixed types: int to float, float math
+(8.0, 16.0)
+```
+
+**Note:** Lines with two expressions return a tuple of results.
+
+Demonstrating operator grouping and precedence:
+
+```py
+>>> b / 2 + a       # Same as ((4 / 2) + 3)
+5.0
+
+>>> b / (2 + a)     # Same as (4 / (2 + 3))
+0.8
+```
+
+Python performs *true* division, which always retains fractional remainders and gives a floating-point result. You can force a fractional result by coding `2.0` instead of `2` or you can use floor division, `//`, which discards the decimal digits in the result, returning truncated floating-point for floats:
+
+```py
+>>> a, b                
+(3, 4)
+
+>>> b // 2 + a          # Floor division: integer
+5
+>>> b // (2 + a)        # Truncates fraction (for positives)
+0
+
+>>> b // 2.0 + a        # Auto-conversions: returns truncated floating-points
+5.0
+>>> b // (2.0 + a)
+0.0
+```

@@ -51,6 +51,7 @@
     - [Numbers in Action](#numbers-in-action)
       - [Variables and Basic Expressions](#variables-and-basic-expressions)
       - [Numeric Display Formats](#numeric-display-formats)
+      - [Comparison Operators](#comparison-operators)
 
 
 ## Part II. Objects and Operations
@@ -1127,4 +1128,48 @@ You can force the issue with string formatting:
 'hack'
 ```
 
+##### Comparison Operators
 
+```py
+>>> 1 < 2
+True
+
+>>> 2.0 >= 1            # Mixed-type 1 converted to 1.0
+True
+
+>>> 2.0 == 2.0
+True
+
+>>> 2.0 != 2.0
+False
+```
+
+###### Chained Comparisons
+
+Python supports chaining multiple comparisons together to perform range tests:
+
+```py
+>>> X = 2
+>>> Y = 4
+>>> Z = 6
+
+>>> X < Y < Z           # Chained comparison: X < Y and Y < Z
+True
+>>> X < Y and Y < Z
+True
+
+>>> X < Y > Z           # Same equivalence holds for false results
+False
+>>> X < Y and Y > Z
+False
+
+>>> 1 < 2 < 3.0 < 4     # Arbitrary chain lengths allowed
+True
+>>> 1 > 2 > 3.0 > 4
+False
+
+>>> 1 == 2 < 3                  # Same as: (1 == 2) and (2 < 3)
+False
+>>> True is False is True       # Same as: (True is False) and (False is True)
+False
+```

@@ -53,6 +53,7 @@
       - [Numeric Display Formats](#numeric-display-formats)
       - [Comparison Operators](#comparison-operators)
       - [Division Operators](#division-operators)
+      - [Integer Precision](#integer-precision)
 
 
 ## Part II. Objects and Operations
@@ -1202,3 +1203,80 @@ True
 ```
 
 ##### Division Operators
+
+Python has two division operators: `/` for true division and `//` for floor division.
+
+- `X / Y`: Called *true* division. Always keeps remainders in floating-point results, regardless of types.
+- `X // Y`: Called *floor* division. Discards the decimal digits in the result, returning truncated floating-point for floats.
+- `X % Y`: Called *modulus*, which returns the remainder of the division.
+
+```py
+>>> 10 / 4                  # True division: keeps remainders
+2.5
+
+>>> 10 / 4.0                # Same with float: keeps remainders
+2.5
+
+>>> 10 // 4                 # Floor division: drops remainder
+2
+
+>>> 10 // 4.0               # Same with float: drops remainder
+2.0
+
+>>> int(10 // 4.0)          # To ensure an integer result, wrap the expression into an `int` to convert
+2
+
+>>> 10 % 3, 10 % 3.0        # Remainder of division: (3 * 3) + 1
+(1, 1.0)
+
+>>> divmod(10, 3)           # Both parts of division in a tuple
+(3, 1)
+```
+
+###### Floor versus truncation
+
+The `//` operator is informally called *truncating* division, but it's more accurate to refer to it as *floor* division because it always rounds down to the nearest whole number, even for negative numbers:
+
+```py
+>>> import math
+>>> math.floor(2.5)             # Closest number below value
+2
+
+>>> math.floor(-2.5)            # But not truncation for negative!
+-3
+
+>>> math.trunc(2.5)             # Truncate fractional part (toward zero)
+2
+
+>>> math.trunc(-2.5)            # And is truncation for negative
+-2
+```
+
+
+```py
+>>> 5 / 2, 5 / -2               # True division: keeps remainders
+(2.5, -2.5)
+
+>>> 5 // 2, 5 // -2             # Truncates to floor: rounds to the first lower integer
+(2, -3)
+
+>>> 5 / 2.0, 5 / -2.0           # Ditto for floats
+(2.5, -2.5)
+
+>>> 5 // 2.0, 5 // -2.0         # Though result is a float, too
+(2.0, -3.0)
+```
+
+```py
+>>> import math                 
+>>> 5 / -2                      # Keep remainder
+-2.5
+
+>>> 5 // -2                     # Floor below result
+-3
+
+>>> math.trunc(5 / -2)          # Truncate instead of floor (same as int())
+-2
+```
+
+##### Integer Precision

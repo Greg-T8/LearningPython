@@ -52,6 +52,7 @@
       - [Variables and Basic Expressions](#variables-and-basic-expressions)
       - [Numeric Display Formats](#numeric-display-formats)
       - [Comparison Operators](#comparison-operators)
+      - [Division Operators](#division-operators)
 
 
 ## Part II. Objects and Operations
@@ -1173,3 +1174,31 @@ False
 >>> True is False is True       # Same as: (True is False) and (False is True)
 False
 ```
+
+###### Floating-Point Equality
+
+Floating-point numbers are not always equal to each other, even if they look like they should be. This is due to the way floating-point numbers are represented in binary, which can lead to small rounding errors.
+
+```py
+>>> 1.1 + 2.2 == 3.3        # Shouldn't this be True?
+False   
+
+>>> 1.1 + 2.2               # CLose to 3.3, but not exactly: limited precision
+3.3000000000000003
+```
+
+To address this issue, either truncate, round, use floors, or call the `math.isclose()` function to compare floating-point numbers with a tolerance for small differences:
+
+```py
+>>> int(1.1 + 2.2) == int(3.3)                  # OK if convert: see also floor, trunc ahead
+True
+
+>>> round(1.1 + 2.2, 1) == round(3.3, 1)
+True
+
+>>> import math                                 
+>>> math.isclose(1.1 + 2.2, 3.3)                # Within default-but-passable tolerances
+True
+```
+
+##### Division Operators

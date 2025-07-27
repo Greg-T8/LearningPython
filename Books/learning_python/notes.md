@@ -54,6 +54,8 @@
       - [Comparison Operators](#comparison-operators)
       - [Division Operators](#division-operators)
       - [Integer Precision](#integer-precision)
+      - [Complex Numbers](#complex-numbers)
+      - [Hex, Octal, and Binary](#hex-octal-and-binary)
 
 
 ## Part II. Objects and Operations
@@ -1280,3 +1282,86 @@ The `//` operator is informally called *truncating* division, but it's more accu
 ```
 
 ##### Integer Precision
+
+Python integers suppport unlimited size:
+
+```py
+>>> 99999999999999999999999999999999999999999999999999999999 + 1
+100000000000000000000000000000000000000000000000000000000
+
+>>> 2 ** 269
+948568795032094272909893509191171341133987714380927500611236528192824358010355712
+
+>>> 2 ** 1000000
+Traceback (most recent call last):
+  File "<python-input-6>", line 1, in <module>
+    2 ** 1000000
+    ~~^^~~~~~~~~
+ValueError: Exceeds the limit (4300 digits) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit
+```
+
+##### Complex Numbers
+
+Complex numbers are a distinct core object type in Python.
+
+```py
+>>> 1j * 1J
+(-1+0j)
+
+>>> 2 + 1j * 3
+(2+3j)
+
+>>> (2 + 1j) * 3
+(6+3j)
+```
+
+##### Hex, Octal, and Binary
+
+```py
+>>> 0x01, 0x10, 0xFF            # Hex literals: based 16, digits 0-9, A-F
+(1, 16, 255)
+
+>>> 0o1, 0o20, 0o377            # Octal literals: base 8, digits 0-7
+(1, 16, 255)
+
+>>> 0b1, 0b10000, 0b11111111    # Binary literals: base 2, digits 0-1
+(1, 16, 255)
+```
+
+Python prints in decimal by default, but you can use the built-in `hex`, `oct`, and `bin` functions to convert numbers to their string representations in other bases:
+
+```py
+>>> oct(64), hex(64), bin(64)               # Numbers => digit strings
+('0o100', '0x40', '0b1000000')
+```
+
+```py
+>>> 64, 0o100, 0x40, 0b1000000              # Digits => numbers in scripts and strings
+(64, 64, 64, 64)
+
+>>> int('64'), int('100', 8), int('40', 16), int('1000000', 2)
+(64, 64, 64, 64)
+
+>>> int('0x40', 16), int('0b1000000', 2)    # Literal forms supported, too
+(64, 64)
+```
+
+The `eval` function can convert digit strings to numbers because it treats strings as though they were Python code:
+
+```py
+>>> eval('64'), eval('0o100'), eval('0x40'), eval('0b1000000')
+(64, 64, 64, 64)
+```
+
+You can convert integers to base-specific strings with any of Python's three string-formatting tools:
+
+```py
+>>> '%o, %x, %#X' % (64, 255, 255)                          # Old-style formatting using `%` operator
+'100, ff, 0XFF'
+
+>>> '{:o}, {:b}, {:x}, {:#X}'.format(64, 64, 255, 255)      # New-style formatting using `str.format()`
+'100, 1000000, ff, 0XFF'
+
+>>> f'{64:o}, {64:b}, {255:x}, {255:#X}'                    # F-string formatting (latest and greatest)
+'100, 1000000, ff, 0XFF'
+```

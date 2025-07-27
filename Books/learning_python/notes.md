@@ -56,6 +56,7 @@
       - [Integer Precision](#integer-precision)
       - [Complex Numbers](#complex-numbers)
       - [Hex, Octal, and Binary](#hex-octal-and-binary)
+      - [Bitwise Operators](#bitwise-operators)
 
 
 ## Part II. Objects and Operations
@@ -1364,4 +1365,101 @@ You can convert integers to base-specific strings with any of Python's three str
 
 >>> f'{64:o}, {64:b}, {255:x}, {255:#X}'                    # F-string formatting (latest and greatest)
 '100, 1000000, ff, 0XFF'
+```
+
+**Note:** `#X` in these examples adds a base prefix and uses uppercase letters for hex digits.
+
+In the following code, you can avoid repeating the same value by using named arguments or assignment expressions:
+
+```py
+>>> '%(i)o, %(j)x, %(j)#X' % dict(i=64, j=255)              # Old-style formatting with named arguments
+'100, ff, 0XFF'
+
+>>> '{0:o}, {0:b}, {1:x}, {1:#X}'.format(64, 255)           # New-style formatting with positional arguments
+'100, 1000000, ff, 0XFF'
+
+>>> f'{(i:=64):o}, {i:b}, {(i:=255):x}, {i:#X}'             # F-string formatting with assignment expressions
+'100, 1000000, ff, 0XFF'
+```
+
+**Note:** The `:=` operator is the Walrus operator and allows you to assign a value to a variable as part of an expression.
+
+Other-base literals and converters support *arbitrarily* large integers:
+
+```py
+>>> X = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+>>> X
+87112285931760246646623899502532662132735
+>>> oct(X)
+'0o1777777777777777777777777777777777777777777777'
+>>> bin(X)
+'0b1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111'
+```
+
+##### Bitwise Operators
+
+Python suports most of the numeric expressions available in C. This includes operators that treat integers as strings of binary bit. This comes in hand when dealing with low-level data like network packets, serial ports, or packed binary data produced for a C program.
+
+```py
+>>> x = 1               # 1 in decimal is 0001 in binary
+
+>>> x << 2              # Shift left by 2 bits: 0100
+4
+
+>>> x | 3               # Bitwise OR: (either bit=1): 0001 | 0011
+3
+
+>>> x & 3               # Bitwise AND: (both bits=1): 0001 & 0011
+1
+```
+
+One useful area in Python is the ability to inspect numbers by bit-strings:
+
+```py
+>>> X = 0b0001          # A 4-bit binary number
+
+>>> X << 2              # Shift left by 2 bits: 0100
+4
+
+>>> bin(X << 2)         # Binary digits string
+'0b100'
+
+>>> bin(X | 0b011)      # Bitwise OR: (either bit=1): 0001 | 0011
+'0b11'
+
+>>> bin(X & 0b11)       # Bitwise AND: (both bits=1): 0001 & 0011
+'0b1'
+```
+
+This is also available for values that begin life as hex literals or undergo base conversions:
+
+```py
+>>> X = 0xFF                    # Hex literals
+
+>>> bin(X)                      
+'0b11111111'
+
+>>> X ^ 0b10101010              # Bitwise XOR: (either bit=1, but not both): 11111111 ^ 10101010
+85
+
+>>> bin(X ^ 0b10101010)         # Binary digits string
+'0b1010101'
+
+>>> int('01010101', 2)          # Digits=>number: string to int per base
+85
+
+>>> hex(85)                     # Number=>digits: hex digit string
+'0x55'
+```
+
+Python integers come with a `bit_length()` method, which allows you to query the number of bits required to represent the number's value in binary:
+
+```py
+>>> X = 99
+
+>>> bin(X), X.bit_length(), len(bin(X)) - 2             # Binary digits string, bit length, and length minus '0b' prefix
+('0b1100011', 7, 7)
+
+>>> bin(256), (256).bit_length(), len(bin(256)) - 2    
+('0b100000000', 9, 9)
 ```

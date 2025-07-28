@@ -1596,3 +1596,68 @@ There are also multiple ways to drop the decimal digits of floating-point number
 >>> '%.1f' % 2.567, '{0:.2f}'.format(2.567)             # Format display
 ('2.6', '2.57')
 ```
+
+`round()` rounds and drops. String formatting produces a string, not a number:
+
+```py
+>>> (1 / 3.0), round(1 / 3.0, 2), f'{(1 / 3.0):.2f}'
+(0.3333333333333333, 0.33, '0.33')
+```
+
+There are different ways to compute square roots in Python: using a module function, an expression, or a built-in function:
+
+```py
+>>> import math
+>>> math.sqrt(144)      # Module
+12.0
+
+>>> 144 ** .5           # Expression
+12.0
+
+>>> pow(144, .5)        # Built-in function
+12.0
+```
+
+The `statistics` and `random` modules provide additional numeric tools:
+
+```py
+>>> import statistics
+>>> statistics.mean([1, 2, 4, 5, 7])
+3.8
+
+>>> statistics.median([1, 2, 4, 5, 7])
+4
+
+>>> import random
+>>> random.random()
+0.3397783973044639
+
+>>> random.random()
+0.9632919797894054
+
+>>> random.randint(1, 10)
+10
+
+>>> random.randint(1, 10)
+5
+```
+
+The `random` module can also choose an item at random from a sequence and shuffle a list of items randomly:
+
+```py
+>>> random.choice(['Pizza', 'Tacos', 'Tikka', 'Lasagna'])
+'Pizza'
+
+>>> random.choice(['Pizza', 'Tacos', 'Tikka', 'Lasagna'])
+'Tacos'
+
+>>> suits = ['hearts', 'clubs', 'diamonds', 'spades']  
+
+>>> random.shuffle(suits)
+>>> suits
+['clubs', 'hearts', 'spades', 'diamonds']
+
+>>> random.shuffle(suits)
+>>> suits
+['hearts', 'spades', 'diamonds', 'clubs']
+```

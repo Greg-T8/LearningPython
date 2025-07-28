@@ -57,7 +57,8 @@
       - [Complex Numbers](#complex-numbers)
       - [Hex, Octal, and Binary](#hex-octal-and-binary)
       - [Bitwise Operators](#bitwise-operators)
-    - [Underscore Separators in Numbers](#underscore-separators-in-numbers)
+      - [Underscore Separators in Numbers](#underscore-separators-in-numbers)
+      - [Other Built-In Numeric Tools](#other-built-in-numeric-tools)
 
 
 ## Part II. Objects and Operations
@@ -1465,7 +1466,7 @@ Python integers come with a `bit_length()` method, which allows you to query the
 ('0b100000000', 9, 9)
 ```
 
-#### Underscore Separators in Numbers
+##### Underscore Separators in Numbers
 
 Numeric literals can use underscores to improve readability, especially for large numbers. 
 
@@ -1550,4 +1551,48 @@ Underscores are helpful for input for string-to-number conversions:
 
 >>> float('1_2_34.567_8_90')
 1234.56789
+```
+
+##### Other Built-In Numeric Tools
+
+Python has built-in functions and standard-library modules for numeric processing:
+
+```py
+>>> import math
+>>> math.pi, math.e                         # Common constants
+(3.141592653589793, 2.718281828459045)
+
+>>> math.sin(2 * math.pi / 180)             # Sine, tangent, cosine
+0.03489949670250097
+
+>>> math.sqrt(144), math.sqrt(2)            # Square root
+(12.0, 1.4142135623730951)
+
+>>> pow(2, 4), 2 ** 4,  2.0 ** 4.0          # Exponentiation
+(16, 16, 16.0)
+
+>>> abs(-62.0), sum((1, 2, 3, 4))           # Absolute value, summation
+(62.0, 10)
+
+>>> min(3, 1, 2, 4), max(3, 1, 2, 4)        # Minimum, maximum
+(1, 4)
+```
+
+There are also multiple ways to drop the decimal digits of floating-point numbers:
+
+```py
+>>> math.floor(2.567), math.floor(-2.567)               # Floor: next-lower integer
+(2, -3)
+
+>>> math.trunc(2.567), math.trunc(-2.567)               # Truncation: drop digits
+(2, -2)
+
+>>> int(2.567), int(-2.567)                             # Truncate: alternative
+(2, -2)
+
+>>> round(2.567), round(2.567, 2), round(2567, -3)      # Round to digits (+/-)
+(3, 2.57, 3000)
+
+>>> '%.1f' % 2.567, '{0:.2f}'.format(2.567)             # Format display
+('2.6', '2.57')
 ```

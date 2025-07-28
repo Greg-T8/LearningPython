@@ -59,6 +59,7 @@
       - [Bitwise Operators](#bitwise-operators)
       - [Underscore Separators in Numbers](#underscore-separators-in-numbers)
       - [Other Built-In Numeric Tools](#other-built-in-numeric-tools)
+    - [Other Numeric Objects](#other-numeric-objects)
 
 
 ## Part II. Objects and Operations
@@ -1661,3 +1662,5 @@ The `random` module can also choose an item at random from a sequence and shuffl
 >>> suits
 ['hearts', 'spades', 'diamonds', 'clubs']
 ```
+
+#### Other Numeric Objects

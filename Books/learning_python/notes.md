@@ -57,6 +57,7 @@
       - [Complex Numbers](#complex-numbers)
       - [Hex, Octal, and Binary](#hex-octal-and-binary)
       - [Bitwise Operators](#bitwise-operators)
+    - [Underscore Separators in Numbers](#underscore-separators-in-numbers)
 
 
 ## Part II. Objects and Operations
@@ -1462,4 +1463,91 @@ Python integers come with a `bit_length()` method, which allows you to query the
 
 >>> bin(256), (256).bit_length(), len(bin(256)) - 2    
 ('0b100000000', 9, 9)
+```
+
+#### Underscore Separators in Numbers
+
+Numeric literals can use underscores to improve readability, especially for large numbers. 
+
+```py
+>>> 9999999999999 == 9_999_999_999_999                      # Decimal: thousands
+True
+
+>>> 0xFFFFFFFF == 0xFF_FF_FF_FF                             # Hex: 8-bit bytes
+True
+
+>>> 0o777777777777 == 0o777_777_777_777                     # Octal: 9 bits each
+True
+
+>>> 0b1111111111111111 == 0b1111_1111_1111_1111             # Binary: 4-bit nibbles
+True
+
+>>> 3.141592653589793 == 3.141_592_653_589_793              # Float: decimal digits
+True
+
+>>> 123456789.123456789 == 123_456_789.123_456_789          # Float: both sides
+True
+```
+
+The underscores are just for show. Numbers lose their underscores once read.
+
+You can add back comma and underscore separators with the *string-formatting* method and f-strings:
+
+```py
+>>> x = 9_999_998               # Underscore separators in numbers
+>>> x                           # Dropped when read: not in displays
+9999998                         
+>>> x + 1                       # Ditto for derived computation results
+9999999
+
+>>> f'{x:,} and {x:_}'          # Formatting adds separators, but just for show
+'9,999,998 and 9_999_998'
+```
+
+Python doesn't do any sanity checks on underscores, except for disallowing leading, trailing, and multiple-appearance uses. The underscores are just digit "spacers" that can be used&mdash;and misused&mdash; arbitrarily:
+
+```py
+>>> 99_9                                # No position-error checking
+999
+
+>>> 1_23_456_7890                       
+1234567890
+
+>>> _9                                                     
+NameError: name '_9' is not defined. Did you mean: '_'?
+
+>>> 9_
+SyntaxError: invalid decimal literal
+
+>>> 9_9__9
+SyntaxError: invalid decimal literal
+
+>>> 9_9_9                               # Syntax oddities checked, semantics not
+999
+
+>>> hex(0xf_ff_fff_f_f)                 # Python doesn't retain your "_"s
+'0xffffffff'
+``` 
+
+Also note that comma's can't be used in numeric literals, as comma's are reserved for tuples:
+
+```py
+>>> 12_345_678
+12345678
+
+>>> 42,345,678
+(42, 345, 678)
+```
+
+Underscores are helpful for input for string-to-number conversions:
+
+```py
+>>> int('1_234_567')
+1234567
+
+>>> eval('1_234_567')
+1234567
+
+>>> float('1_2_34.567_8_90')
+1234.56789
 ```

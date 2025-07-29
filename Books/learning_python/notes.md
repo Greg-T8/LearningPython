@@ -61,6 +61,7 @@
       - [Other Built-In Numeric Tools](#other-built-in-numeric-tools)
     - [Other Numeric Objects](#other-numeric-objects)
       - [Decimal Objects](#decimal-objects)
+      - [Fraction Objects](#fraction-objects)
 
 
 ## Part II. Objects and Operations
@@ -1691,4 +1692,86 @@ Using `print` for the user-friendly display format does't help here, because the
 >>> from decimal import Decimal
 >>> Decimal('0.1') + Decimal('0.1') + Decimal('0.1') - Decimal('0.3')
 Decimal('0.0')
+```
+
+You can also create a decimal object from a floating-point object:
+
+```py
+>>> Decimal(0.1) + Decimal(0.1) + Decimal(0.1) - Decimal(0.3) 
+Decimal('2.775557561565156540423631668E-17')
+
+>>> Decimal.from_float(0.1) + Decimal.from_float(0.1) + Decimal.from_float(0.1) - Decimal.from_float(0.3)
+Decimal('2.775557561565156540423631668E-17')
+```
+
+The conversion is exact but can yield a large default number of digits, unless they are fixed.
+
+###### Setting decimal precision
+
+Other tools in the `decimal` module can be used to set the precision, arrange error handling, and more.
+
+```py
+>>> import decimal
+>>> decimal.Decimal(1) / decimal.Decimal(7)
+Decimal('0.1428571428571428571428571429')                   # Default precision
+
+>>> decimal.getcontext().prec = 4                           
+>>> decimal.Decimal(1) / decimal.Decimal(7)
+Decimal('0.1429')                                           # Fixed precision
+
+>>> Decimal(0.1) + Decimal(0.1) + Decimal(0.1) - Decimal(0.3)
+Decimal('1.110E-17')                                        # Closer to 0...
+```
+
+##### Fraction Objects
+
+Python's standard library `fractions` module implements a *rational number* object. It keeps both a numerator and denominator explicitly to avoid the inaccuracies and limitations of floating-point math.
+
+Like decimals, fractions do not map as closely to computer hardware as floating-point numbers. This means their performance bay not be as good, but it also allows them to provide extra utility in a standard tool where useful.
+
+###### Fraction basics
+
+`Fraction` is a functional cousin to the `Decimal` fixed-precision floating-point object, as both can be used to address the floating-point object's numerical inaccuracies.
+
+It is also used in similar ways&mdash;like `Decimal`, `Fraction` resides in a module; import its constructor and pass in a numerator and a denominator:
+
+```py
+>>> from fractions import Fraction
+>>> x = Fraction(1, 3)                  # Numerator, denominator
+>>> y = Fraction(4, 6)                  # Simplified to 2/3
+
+>>> x
+Fraction(1, 3)
+
+>>> y
+Fraction(2, 3)
+
+>>> print(y)
+2/3
+```
+
+Fractions can be used in mathematical expressions:
+
+```py
+>>> x + y
+Fraction(1, 1)
+
+>>> x - y
+Fraction(-1, 3)                         # Results are exact: numerator, denominator
+
+>>> x * y
+Fraction(2, 9)
+```
+
+You can create `Fraction` objects from  floating-point number strings:
+
+```py
+>>> Fraction('.25')
+Fraction(1, 4)
+
+>>> Fraction('1.25')
+Fraction(5, 4)
+
+>>> Fraction('.25') + Fraction('1.25')
+Fraction(3, 2)
 ```

@@ -62,6 +62,7 @@
     - [Other Numeric Objects](#other-numeric-objects)
       - [Decimal Objects](#decimal-objects)
       - [Fraction Objects](#fraction-objects)
+      - [Numeric accuracy in fractions and decimals](#numeric-accuracy-in-fractions-and-decimals)
 
 
 ## Part II. Objects and Operations
@@ -1774,4 +1775,88 @@ Fraction(5, 4)
 
 >>> Fraction('.25') + Fraction('1.25')
 Fraction(3, 2)
+```
+
+##### Numeric accuracy in fractions and decimals
+
+Fraction math is different from floating-point math, which is constrained by the underlying limitations of floating-point hardware. 
+
+```py
+>>> a = 1 / 3                       # Only as accurate as floating-point hardware
+>>> b = 4 / 6                       # Can lose precision over many calculations
+
+>>> a
+0.3333333333333333
+
+>>> b
+0.6666666666666666
+
+>>> a + b
+1.0
+
+>>> a - b
+-0.3333333333333333
+
+>>> a * b
+0.2222222222222222
+```
+
+The floating-point limitation is especially apparant for values that cannot be represented accurately given their limited number of bits in memory.
+
+Both `Fraction` and `Decimal` provide ways to get exact results, albeit at some lost speed and added code verbosity.
+
+In the following example, floating-point numbers do not accuractely give the zero answer expected, but both of the other types do:
+
+```py
+>>> 0.1 + 0.1 + 0.1 - 0.3               # This should be zero (close, but not exact)
+5.551115123125783e-17
+
+>>> from fractions import Fraction
+>>> Fraction(1, 10) + Fraction(1, 10) + Fraction(1, 10) - Fraction(3, 10)
+Fraction(0, 1)
+
+>>> from decimal import Decimal
+>>> Decimal('0.1') + Decimal('0.1') + Decimal('0.1') - Decimal('0.3')
+Decimal('0.0')
+```     
+
+Fractions and decimals allow more intuitive and accurate results than floating-points sometimes can, in different ways&mdash;by using rational represntation and by limiting precision:
+
+```py
+>>> 1 / 3                               # Normal floating-point
+0.3333333333333333
+
+>>> Fraction(1, 3)                      # Numeric accuracy: rational representation
+Fraction(1, 3)
+
+>>> import decimal                      # Numeric accuracy: fixed precision
+>>> decimal.getcontext().prec = 2
+>>> Decimal(1) / Decimal(3)
+Decimal('0.33')
+```
+
+Fractions both retain accuracy and simplify results:
+
+```py
+>>> (1 / 3) + (6 / 12)
+0.8333333333333333
+
+>>> Fraction(1, 3) + Fraction(6, 12)
+Fraction(5, 6)
+
+>>> decimal.Decimal(1 / 3) + decimal.Decimal(6 / 12)
+Decimal('0.83')
+```
+
+To support conversions, floating-point objects have an `as_integer_ratio()` method that yields the numerator and denominator; fractions have a `from_float()` method; and `float` accepts a `Fraction` object as an argument:
+
+```py
+>>> 0.3.as_integer_ratio()
+(5404319552844595, 18014398509481984)
+
+>>> Fraction.from_float(0.3)
+Fraction(5404319552844595, 18014398509481984)
+
+>>> float(Fraction(1, 3))
+0.3333333333333333
 ```

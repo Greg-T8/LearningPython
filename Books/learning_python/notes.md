@@ -60,6 +60,7 @@
       - [Underscore Separators in Numbers](#underscore-separators-in-numbers)
       - [Other Built-In Numeric Tools](#other-built-in-numeric-tools)
     - [Other Numeric Objects](#other-numeric-objects)
+      - [Decimal Objects](#decimal-objects)
 
 
 ## Part II. Objects and Operations
@@ -1664,3 +1665,30 @@ The `random` module can also choose an item at random from a sequence and shuffl
 ```
 
 #### Other Numeric Objects
+
+##### Decimal Objects
+
+Python has a special-purpose numeric object type called `Decimal`. Decimals are created by calling a function within an imported standar-library module. 
+
+Functionally, decimals are like floating-point numbers, but they have a fixed and configurable number of decimal digits. Hence, decimals are *fixed-precision* floating-point values.
+
+With decimals, you can have a floating-point value that always retains just two decimal digits. You can specify how you round or truncate the extra digits beyond the object's cutoff.
+
+Decimals are well suited for representing fixed-precision quantities like sums of money and can achieve better accuracy in some contexts.
+
+###### Decimal basics
+
+Floating-point math is less than exact because of the limited space to store values. For example, the following expression should yield zero, but it does not:
+
+```py
+>>> 0.1 + 0.1 + 0.1 - 0.3
+5.551115123125783e-17
+```
+
+Using `print` for the user-friendly display format does't help here, because the hardware related to floating-point math is inherently limited in terms of accuracy, i.e. precision. With decimals, however, the result can be dead-on:
+
+```py
+>>> from decimal import Decimal
+>>> Decimal('0.1') + Decimal('0.1') + Decimal('0.1') - Decimal('0.3')
+Decimal('0.0')
+```

@@ -63,6 +63,8 @@
       - [Decimal Objects](#decimal-objects)
       - [Fraction Objects](#fraction-objects)
       - [Numeric accuracy in fractions and decimals](#numeric-accuracy-in-fractions-and-decimals)
+      - [Set Objects](#set-objects)
+      - [Sets in action](#sets-in-action)
 
 
 ## Part II. Objects and Operations
@@ -1860,3 +1862,134 @@ Fraction(5404319552844595, 18014398509481984)
 >>> float(Fraction(1, 3))
 0.3333333333333333
 ```
+
+##### Set Objects
+
+Python also supports sets—unordered collections of unique, immutable objects with operations based on mathematical set theory. They sit between collections and math but lean toward the latter. An item appears only once in a set, regardless of how many times it’s added. This makes them useful in areas like numeric processing and database work.
+
+As collections, sets share traits with lists and dictionaries from Chapter 4: they are iterable, can grow or shrink dynamically, and can hold different object types.
+
+However, sets are neither sequences nor mappings since they are unordered and don’t map keys to values. They form their own type category. Because they are used less often than lists or dictionaries, a brief overview will be enough here, starting with the usual REPL examples.
+
+##### Sets in action
+
+There are two ways to create sets: by calling the `set` function or using a literal. A set literal uses `{}` braces like dictionaries but lists only values (no keys). The `set` call accepts any iterable and is required to make an empty set, since `{}` creates an empty dictionary. When printed, sets use the literal form unless empty.
+
+```python
+x = set('abcde')                     # Create from iterable
+y = {99, 'b', 'y', 'd', 1.2}         # Literal form
+
+x
+{'d', 'c', 'e', 'a', 'b'}            # Unordered output
+y
+{1.2, 99, 'y', 'd', 'b'}
+```
+
+Sets don’t preserve insertion order, so sequence operations won’t work. Empty sets require a function call. The `*` operator in literals unpacks values. Both `set()` and `*` accept any iterable, and duplicates are always removed.
+
+```python
+z = set()                            # Empty set
+z
+set()
+
+z = set([1.2, 'a', 3, 1.2, 'a'])     # Duplicates removed
+z
+{'a', 1.2, 3}
+
+{1, *'abc', *[1, 2, 3]}              # Literal unpacking
+{1, 2, 3, 'c', 'b', 'a'}
+```
+
+Set operators perform standard mathematical operations. Non-set types must first be converted to sets:
+
+```python
+x = set('abcd')
+y = set('bdxy')
+
+x - y                                # Difference
+{'a', 'c'}
+
+x | y                                # Union
+{'y', 'd', 'x', 'c', 'a', 'b'}
+
+x & y                                # Intersection
+{'d', 'b'}
+
+x ^ y                                # Symmetric difference
+{'y', 'x', 'c', 'a'}
+
+x < y, x > y                         # Subset, superset:  True if x is a proper subset of y
+(False, False)
+```
+
+Membership tests work on all collections, not just sets:
+
+```python
+'d' in x
+True
+
+'d' in 'code', 2 in [1, 2, 3]
+(True, True)
+```
+
+Set methods offer the same operations plus more. They can also change the set in place:
+
+```python
+z = x.intersection(y)                # Same as x & y
+z
+{'d', 'b'}
+
+z.add('HACK')                        # Add one item
+z
+{'HACK', 'd', 'b'}
+
+z.update(['X', 'Y'])                  # Merge from iterable
+z
+{'X', 'HACK', 'd', 'b', 'Y'}
+
+z.remove('b')                        # Remove one item
+z
+{'X', 'HACK', 'd', 'Y'}
+```
+
+Sets are iterable, so they work with `len`, loops, and comprehensions. Being unordered, they don’t support indexing, slicing, or concatenation:
+
+```python
+for item in set('abc'):
+    print(item * 3)
+
+aaa
+ccc
+bbb
+
+{'a', 'b', 'c'} + {'d'}
+# TypeError: unsupported operand type(s) for +: 'set' and 'set'
+```
+
+Expression operators require both operands to be sets, but method calls can accept any iterable and may be faster:
+
+```python
+S = {1, 2, 3}
+S | set([3, 4])                       # Union with another set
+{1, 2, 3, 4}
+
+S.union([3, 4])                       # Works with list
+{1, 2, 3, 4}
+
+S.intersection((1, 3, 5))             # Works with tuple
+{1, 3}
+
+S.issubset(range(-5, 5))              # True if S is a subset of the range
+True
+
+S = {1, 2, 3}
+S.intersection_update((1, 2, 5))      # In-place intersection: modifies S
+S
+{1, 2}
+
+S |= {1, 2, 4}                        # In-place union
+S
+{1, 2, 4}
+```
+
+For more details, see Python’s library documentation. Built-in sets are optimized for fast, standard set operations, replacing older manual implementations using lists or dictionaries.

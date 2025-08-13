@@ -2103,3 +2103,74 @@ Output:
 ```
 
 More on comprehensions—including nested loops and conditionals—will be covered in later chapters. Lists and dictionaries use similar syntax and will be introduced in Chapter 8, with deeper coverage in Chapters 14 and 20.
+
+###### Why sets?
+
+Set operations have many practical uses beyond mathematics. Since sets store each item only once, they’re handy for removing duplicates—though you lose the original order because sets are unordered. Convert the collection to a set, then back to a list:
+
+```python
+L = [1, 2, 1, 3, 2, 4, 5]
+set(L)
+{1, 2, 3, 4, 5}
+L = list(set(L))                              # Remove duplicates
+L
+[1, 2, 3, 4, 5]
+
+list(set(['yy', 'cc', 'aa', 'xx', 'dd', 'aa']))   # Order may change
+['xx', 'cc', 'yy', 'aa', 'dd']
+```
+
+Sets can also isolate differences in lists, strings, or other iterables. Just convert to sets and take the difference. Results won’t follow the original order:
+
+```python
+set([1, 3, 5, 7]) - set([1, 2, 4, 5, 6])      # List differences
+{3, 7}
+set('abcdefg') - set('abdghij')               # String differences
+{'c', 'e', 'f'}
+set('code') - set(['t', 'o', 'e'])            # Mixed types
+{'c', 'd'}
+```
+
+You can use sets for order-neutral equality tests. Two sets are equal if each is a subset of the other. This helps compare results where order doesn’t matter, without sorting:
+
+```python
+L1, L2 = [1, 3, 5, 2, 4], [2, 5, 3, 4, 1]
+L1 == L2                                      # Order matters in lists
+False
+set(L1) == set(L2)                            # Order-neutral equality
+True
+sorted(L1) == sorted(L2)                      # Similar, but ordered
+True
+'code' == 'edoc', set('code') == set('edoc'), sorted('code') == sorted('edoc')
+(False, True, True)
+```
+
+When traversing graphs or cyclic structures, sets efficiently track visited items to avoid loops. Lists are slower here due to linear searches. Dictionaries also work, but sets are simpler.
+
+For large datasets, sets are useful for intersections (common items) and unions (all items). Example with company roles:
+
+```python
+engineers = {'pat', 'ann', 'bob', 'sue'}
+managers  = {'sue', 'tom'}
+
+'pat' in engineers                   # Is pat an engineer?
+True
+engineers & managers                 # Both engineer and manager
+{'sue'}
+engineers | managers                 # In either category
+{'ann', 'sue', 'pat', 'tom', 'bob'}
+engineers - managers                 # Engineers not managers
+{'pat', 'ann', 'bob'}
+managers - engineers                 # Managers not engineers
+{'tom'}
+engineers > managers                 # All managers are engineers?
+False
+{'sue', 'bob'} < engineers           # Both are engineers?
+True
+(managers | engineers) > managers    # All people is superset of managers
+True
+managers ^ engineers                 # In one group but not both
+{'ann', 'pat', 'tom', 'bob'}
+```
+
+For more on set operations, see the Python library manual or related math/database references. Chapter 8 will revisit sets with dictionary views.

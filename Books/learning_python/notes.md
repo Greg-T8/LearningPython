@@ -65,6 +65,7 @@
       - [Set Objects](#set-objects)
       - [Boolean Objects](#boolean-objects)
     - [Numeric Extensions](#numeric-extensions)
+  - [6. The Dynamic Typing Interlude](#6-the-dynamic-typing-interlude)
 
 
 ## Part II. Objects and Operations
@@ -2239,3 +2240,11 @@ Python’s built-in numeric types are powerful, but many third-party open-source
 These tools are widely used in research, finance, and aerospace, handling tasks once done in C++ or Fortran. Many users consider Python with these extensions a free, flexible, and powerful alternative to systems like MATLAB.
 
 Still, numeric programming is just one major use of Python—others, like web development, are equally significant. This book focuses on teaching core Python, which is used across all fields. Once you’ve learned the language, you’ll find plenty of resources to explore numeric add-ons when you’re ready.
+
+### 6. The Dynamic Typing Interlude
+
+In the previous chapter, we explored Python’s core object types by examining numbers and their operations. We'll continue this exploration in the next chapter. But first, it's crucial to understand a key concept in Python programming: dynamic typing, and the polymorphism it enables.
+
+In Python, we don't declare object types explicitly. In fact, most programs are designed not to depend on specific types. This lack of constraints allows code to be more flexible and adaptable across different contexts—often more than expected.
+
+Dynamic typing is the foundation of this flexibility, but it can also confuse newcomers. So before moving on, we’ll briefly explore how it works. We'll also touch on the paradox of type hinting and why it’s often best avoided.

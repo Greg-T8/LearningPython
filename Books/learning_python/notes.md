@@ -62,9 +62,7 @@
     - [Other Numeric Objects](#other-numeric-objects)
       - [Decimal Objects](#decimal-objects)
       - [Fraction Objects](#fraction-objects)
-      - [Numeric accuracy in fractions and decimals](#numeric-accuracy-in-fractions-and-decimals)
       - [Set Objects](#set-objects)
-      - [Sets in action](#sets-in-action)
 
 
 ## Part II. Objects and Operations
@@ -1779,7 +1777,7 @@ Fraction(5, 4)
 Fraction(3, 2)
 ```
 
-##### Numeric accuracy in fractions and decimals
+###### Numeric accuracy in fractions and decimals
 
 Fraction math is different from floating-point math, which is constrained by the underlying limitations of floating-point hardware. 
 
@@ -1871,7 +1869,7 @@ As collections, sets share traits with lists and dictionaries from Chapter 4: th
 
 However, sets are neither sequences nor mappings since they are unordered and don’t map keys to values. They form their own type category. Because they are used less often than lists or dictionaries, a brief overview will be enough here, starting with the usual REPL examples.
 
-##### Sets in action
+###### Sets in action
 
 There are two ways to create sets: by calling the `set` function or using a literal. A set literal uses `{}` braces like dictionaries but lists only values (no keys). The `set` call accepts any iterable and is required to make an empty set, since `{}` creates an empty dictionary. When printed, sets use the literal form unless empty.
 
@@ -1993,3 +1991,115 @@ S
 ```
 
 For more details, see Python’s library documentation. Built-in sets are optimized for fast, standard set operations, replacing older manual implementations using lists or dictionaries.
+
+###### Immutable constraints and frozen sets
+
+Sets are flexible and powerful, but they have one key limitation: they can only contain immutable (hashable) objects. This means lists and dictionaries can't be added to sets, but tuples containing only immutable elements can.
+
+```python
+S = {1.23}
+
+S.add([1, 2, 3])				            # Only immutable objects work in a set
+TypeError: unhashable type: 'list'
+
+S.add({'a': 1})				                # Dictionaries are also unhashable, i.e. mutable
+TypeError: unhashable type: 'dict'
+
+S.add((1, 2, 3))				            # Tuples are allowed
+S						                    # Resulting set
+{1.23, (1, 2, 3)}
+
+S | {(4, 5, 6), (1, 2, 3)}			        # Union: same as S.union(...)
+{1.23, (4, 5, 6), (1, 2, 3)}
+
+(1, 2, 3) in S					            # Membership test by full value
+True
+
+(1, 4, 3) in S
+False
+```
+
+Tuples in sets can represent compound data like dates, records, or IP addresses. Sets can also include modules, types, and more. However, since sets themselves are mutable, they can't be nested in other sets. To include a set within a set, use `frozenset`, which is immutable:
+
+```python
+S.add(frozenset('app'))
+S
+{1.23, (1, 2, 3), frozenset({'a', 'p'})}
+```
+
+###### Set comprehensions
+
+In addition to literals and function calls, sets can be created using comprehension expressions, first introduced in Chapter 4. Comprehensions also apply to lists, dictionaries, and generators, and work similarly across all.
+
+Set comprehensions use curly braces. They run a loop that applies an expression on each iteration. The loop variable represents the current item. The result is a new set with standard set behavior.
+
+Example:
+
+```python
+{x ** 2 for x in [1, 2, 3, 4]}				# Create a set with squared values
+```
+
+Output:
+
+```python
+{16, 1, 4, 9}
+```
+
+The expression on the left (`x ** 2`) is evaluated for each item in the list. It means: “Create a set of x squared for every x in the list.”
+
+Comprehensions can loop over other iterables, like strings:
+
+```python
+{x for x in 'py3X'}					        # Same as set('py3X')
+```
+
+Output:
+
+```python
+{'p', 'X', '3', 'y'}
+```
+
+```python
+{c * 4 for c in 'py3X'}				        # Repeat each character 4 times
+```
+
+Output:
+
+```python
+{'yyyy', '3333', 'XXXX', 'pppp'}
+```
+
+```python
+{c * 4 for c in 'py3X' + 'py2X'}			# Works across combined strings
+```
+
+Output:
+
+```python
+{'yyyy', '3333', 'XXXX', '2222', 'pppp'}
+```
+
+Set operations work on comprehension results:
+
+```python
+S = {c * 4 for c in 'py3X'}				    # Create a set S
+S | {'zzzz', 'XXXX'}					    # Union
+```
+
+Output:
+
+```python
+{'yyyy', '3333', 'XXXX', 'pppp', 'zzzz'}
+```
+
+```python
+S & {'zzzz', 'XXXX'}					    # Intersection
+```
+
+Output:
+
+```python
+{'XXXX'}
+```
+
+More on comprehensions—including nested loops and conditionals—will be covered in later chapters. Lists and dictionaries use similar syntax and will be introduced in Chapter 8, with deeper coverage in Chapters 14 and 20.

@@ -63,6 +63,8 @@
       - [Decimal Objects](#decimal-objects)
       - [Fraction Objects](#fraction-objects)
       - [Set Objects](#set-objects)
+      - [Boolean Objects](#boolean-objects)
+    - [Numeric Extensions](#numeric-extensions)
 
 
 ## Part II. Objects and Operations
@@ -2109,14 +2111,16 @@ More on comprehensions—including nested loops and conditionals—will be cover
 Set operations have many practical uses beyond mathematics. Since sets store each item only once, they’re handy for removing duplicates—though you lose the original order because sets are unordered. Convert the collection to a set, then back to a list:
 
 ```python
-L = [1, 2, 1, 3, 2, 4, 5]
-set(L)
+L = [1, 2, 1, 3, 2, 4, 5]                           # A list with duplicates
+
+set(L)                                              # Convert to set to remove duplicates
 {1, 2, 3, 4, 5}
-L = list(set(L))                              # Remove duplicates
+
+L = list(set(L))                                    # Remove duplicates
 L
 [1, 2, 3, 4, 5]
 
-list(set(['yy', 'cc', 'aa', 'xx', 'dd', 'aa']))   # Order may change
+list(set(['yy', 'cc', 'aa', 'xx', 'dd', 'aa']))     # Order may change
 ['xx', 'cc', 'yy', 'aa', 'dd']
 ```
 
@@ -2125,8 +2129,10 @@ Sets can also isolate differences in lists, strings, or other iterables. Just co
 ```python
 set([1, 3, 5, 7]) - set([1, 2, 4, 5, 6])      # List differences
 {3, 7}
+
 set('abcdefg') - set('abdghij')               # String differences
 {'c', 'e', 'f'}
+
 set('code') - set(['t', 'o', 'e'])            # Mixed types
 {'c', 'd'}
 ```
@@ -2137,10 +2143,13 @@ You can use sets for order-neutral equality tests. Two sets are equal if each is
 L1, L2 = [1, 3, 5, 2, 4], [2, 5, 3, 4, 1]
 L1 == L2                                      # Order matters in lists
 False
+
 set(L1) == set(L2)                            # Order-neutral equality
 True
+
 sorted(L1) == sorted(L2)                      # Similar, but ordered
 True
+
 'code' == 'edoc', set('code') == set('edoc'), sorted('code') == sorted('edoc')
 (False, True, True)
 ```
@@ -2155,22 +2164,78 @@ managers  = {'sue', 'tom'}
 
 'pat' in engineers                   # Is pat an engineer?
 True
+
 engineers & managers                 # Both engineer and manager
 {'sue'}
+
 engineers | managers                 # In either category
 {'ann', 'sue', 'pat', 'tom', 'bob'}
+
 engineers - managers                 # Engineers not managers
 {'pat', 'ann', 'bob'}
+
 managers - engineers                 # Managers not engineers
 {'tom'}
+
 engineers > managers                 # All managers are engineers?
 False
+
 {'sue', 'bob'} < engineers           # Both are engineers?
 True
+
 (managers | engineers) > managers    # All people is superset of managers
 True
+
 managers ^ engineers                 # In one group but not both
 {'ann', 'pat', 'tom', 'bob'}
 ```
 
 For more on set operations, see the Python library manual or related math/database references. Chapter 8 will revisit sets with dictionary views.
+
+##### Boolean Objects
+
+Though a bit ambiguous, Python’s `bool` type is essentially numeric. Its values `True` and `False` are just customized versions of integers `1` and `0` that display differently. Like many languages, Python treats `1` as true and `0` as false, but `True` and `False` make the intent clearer.
+
+Python has a distinct Boolean type called `bool`. The names `True` and `False` refer to instances of this type. Internally, `bool` is a subclass of `int`, so `True` and `False` behave like `1` and `0` in arithmetic, but print as `True` and `False`. This is achieved by overriding the `str` and `repr` methods for the `bool` type. As a result, logical expressions return `True` or `False`, making outputs at the prompt more readable.
+
+Using `True` and `False` also improves code clarity. For example:
+
+```python
+while True:         # More readable than: while 1:
+```
+
+```python
+flag = False        # Easier to understand than: flag = 0
+```
+
+Still, `True` and `False` act like `1` and `0` in many contexts. For example:
+
+```python
+>>> type(True)
+<class 'bool'>
+
+>>> isinstance(True, int)
+True
+
+>>> True == 1
+True
+
+>>> True is 1
+False                  	# Different objects
+
+>>> True or False
+True                   	# Same as: 1 or 0
+
+>>> True + 4
+5                      	# Acts like 1 + 4
+```
+
+While arithmetic with `True` and `False` is valid, such use is rare and usually unnecessary. Booleans will be covered again in Chapter 9 (truth testing) and Chapter 12 (Boolean operators like `and`, `or`).
+
+#### Numeric Extensions
+
+Python’s built-in numeric types are powerful, but many third-party open-source libraries exist for specialized numeric tasks. As noted in Chapter 1, tools like NumPy, SciPy, pandas, matplotlib, and Jupyter form a common stack for advanced numerical work. Other libraries support fields like statistics, astronomy, and AI.
+
+These tools are widely used in research, finance, and aerospace, handling tasks once done in C++ or Fortran. Many users consider Python with these extensions a free, flexible, and powerful alternative to systems like MATLAB.
+
+Still, numeric programming is just one major use of Python—others, like web development, are equally significant. This book focuses on teaching core Python, which is used across all fields. Once you’ve learned the language, you’ll find plenty of resources to explore numeric add-ons when you’re ready.

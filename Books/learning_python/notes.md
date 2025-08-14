@@ -66,6 +66,10 @@
       - [Boolean Objects](#boolean-objects)
     - [Numeric Extensions](#numeric-extensions)
   - [6. The Dynamic Typing Interlude](#6-the-dynamic-typing-interlude)
+  - [The Case of the Missing Declaration Statements](#the-case-of-the-missing-declaration-statements)
+    - [Variables, Objects, and References](#variables-objects-and-references)
+      - [Python References for C Programmers](#python-references-for-c-programmers)
+    - [Types Live with Objects, Not Variables](#types-live-with-objects-not-variables)
 
 
 ## Part II. Objects and Operations
@@ -2248,3 +2252,108 @@ In the previous chapter, we explored Python’s core object types by examining n
 In Python, we don't declare object types explicitly. In fact, most programs are designed not to depend on specific types. This lack of constraints allows code to be more flexible and adaptable across different contexts—often more than expected.
 
 Dynamic typing is the foundation of this flexibility, but it can also confuse newcomers. So before moving on, we’ll briefly explore how it works. We'll also touch on the paradox of type hinting and why it’s often best avoided.
+
+### The Case of the Missing Declaration Statements
+
+If you're used to statically typed languages like C, C++, or Java, this might seem confusing. So far, we've used variables without declaring their type or even their existence—and it still works. For example, when you write:
+
+```python
+a = 3
+```
+
+how does Python know that `a` is an integer? Or what `a` is at all?
+
+These questions lead into Python’s dynamic typing model. In Python, types are determined at runtime, not through prior declarations. You don’t need to declare variables. This becomes clearer when you understand that it’s all about variables, objects, and the connections between them—explained in the next section.
+
+#### Variables, Objects, and References
+
+In Python, writing
+
+```python
+a = 3
+```
+
+works even if you haven’t declared `a` or said it should be an integer. This is because of Python’s dynamic typing.
+
+**Variable creation**
+A variable (or *name*) is created the first time you assign it a value. Later assignments update the existing name. While Python may detect some names before execution (e.g., function locals), you can think of variables as created by assignment.
+
+**Variable types**
+Variables themselves have no type. Type information belongs to the objects they reference. A variable is just a label pointing to an object at a given moment.
+
+**Variable use**
+When a variable appears in an expression, Python substitutes the object it currently refers to. Variables must be assigned before use—referencing one without a value causes an error.
+
+In short:
+
+* Variables are created by assignment.
+* They can reference any object type.
+* They must be initialized before use.
+
+You never declare variables in advance, but you must assign them before updating. For example, a counter must be set to `0` before incrementing.
+
+**Example**
+
+```python
+a = 3				# Assign a name to an object
+```
+
+Conceptually, Python does three things:
+
+1. Creates an object for the value `3`.
+2. Creates the name `a` if it doesn’t exist.
+3. Links `a` to the `3` object.
+
+Internally, variables and objects are stored separately and connected by links. A variable always points to an object, never another variable. Complex objects (like lists) may point to other objects they contain.
+
+In Python, the links between variables and objects are called *references*. A reference is essentially the object’s memory address. When you use a variable, Python follows this link to the object.
+
+In practical terms:
+
+* **Variables** are named entries in a table, each holding a link to an object.
+* **Objects** are blocks of allocated memory that store values.
+* **References** are the pointers from variables to objects.
+
+When your code creates a new value (via an expression), Python allocates a new object to hold it. Some immutable objects—like small integers and short strings—are cached and reused internally, but conceptually, each result is its own object in memory.
+
+Every object also has two internal header fields:
+
+1. A **type designator** identifying its type.
+2. A **reference counter** tracking how many variables (or other objects) link to it, which determines when it can be reclaimed.
+
+
+##### Python References for C Programmers
+
+For C programmers, Python references are somewhat like C pointers (memory addresses). In CPython, they’re actually implemented as pointers and can serve similar purposes, especially for mutable objects.
+
+However, Python automatically dereferences them when used, so you never work with the reference itself. You can get the object’s memory address with the built-in `id()` function, but even that isn’t strictly guaranteed to be the real address—see the Python docs for details.
+
+By not exposing raw pointers, Python avoids a whole class of common C bugs. You can loosely think of Python references as C `void*` pointers that are always automatically followed when used.
+
+
+#### Types Live with Objects, Not Variables
+
+Consider what happens when we assign a variable multiple times:
+
+```python
+a = 3				# Integer
+a = 'hack'			# String
+a = 1.23			# Float
+```
+
+Here, `a` starts as an integer, then becomes a string, then a float. To someone coming from C, it may look like `a` changes type—but that’s not what’s happening.
+
+In Python, **names have no types**. Types belong to **objects**, not variables. Each assignment simply makes `a` reference a different object.
+
+* The integer object `3` stores the value `3` plus a type tag pointing to `int`.
+* The string `'hack'` has a type tag pointing to `str`.
+* The float `1.23` points to `float`.
+
+Variables just point to objects; objects know their own types. In most programs, a variable tends to refer to the same kind of object over its lifetime, but it’s not required. This flexibility allows Python code to work with many types automatically.
+
+Every object has two header fields:
+
+1. **Type designator** – identifies the object’s type.
+2. **Reference counter** – tracks how many references point to it.
+
+The reference counter determines when an object’s memory can be reclaimed.

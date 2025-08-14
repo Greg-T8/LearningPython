@@ -70,6 +70,10 @@
     - [Variables, Objects, and References](#variables-objects-and-references)
       - [Python References for C Programmers](#python-references-for-c-programmers)
     - [Types Live with Objects, Not Variables](#types-live-with-objects-not-variables)
+    - [Objects are Garbage-Collected](#objects-are-garbage-collected)
+      - [More on Python Garbage Collection](#more-on-python-garbage-collection)
+    - [Shared References](#shared-references)
+      - [Shared References and In-Place Changes](#shared-references-and-in-place-changes)
 
 
 ## Part II. Objects and Operations
@@ -2357,3 +2361,169 @@ Every object has two header fields:
 2. **Reference counter** – tracks how many references point to it.
 
 The reference counter determines when an object’s memory can be reclaimed.
+
+#### Objects are Garbage-Collected
+
+When you reassign a variable in Python, the object it previously referenced may be discarded if nothing else refers to it.
+
+Example:
+
+```python
+a = 3
+a = 'text'			# 3 is reclaimed if unreferenced
+```
+
+If no other variables or objects reference `3`, its memory is automatically freed. This process is called **garbage collection**.
+
+Consider:
+
+```python
+x = 99
+x = 'Python'		# Reclaims 99 (if unreferenced)
+x = 3.1415			# Reclaims 'Python'
+x = [1, 2, 3]		# Reclaims 3.1415
+```
+
+* `x` points to a new object each time.
+* Types appear to change, but really, the variable just references different objects.
+* Old references are discarded, and Python reclaims the memory.
+
+Internally, Python tracks a **reference counter** for every object. When the count hits zero, the object’s space is freed.
+
+**The benefit:** you can freely create and replace objects without manually allocating or freeing memory, unlike in C or C++. Python handles cleanup as your program runs.
+
+##### More on Python Garbage Collection
+
+Python's garbage collection mainly uses reference counting. It also includes a cycle detector that reclaims objects involved in circular references. This detector is enabled by default but can be disabled if you're sure your code doesn't create cycles.
+
+Both reference counts and the cycle detector handle garbage collection. However, users from languages without reference counting may think only of the latter as "garbage collection."
+
+Circular references are a known issue in reference-counting systems. Since references are pointers, an object can reference itself or another object that refers back. For example, `L.append(L)` creates a cycle by embedding a list within itself. Similar cycles can happen with attributes in user-defined class instances. These cases are rare but important—such objects never reach a zero reference count, so the cycle detector must handle them.
+
+
+#### Shared References
+
+So far, we've looked at what happens when a single variable is assigned to different objects. Now let's add another variable and observe how references work:
+
+```python
+a = 3
+b = a           # Both a and b reference the same object
+```
+
+The second line creates the variable `b`. Since `a` is only being used (not assigned), Python replaces it with the object it references (3). Then `b` is set to reference the same object. As a result, both `a` and `b` point to the same object in memory.
+
+This is called a **shared reference** (or **shared object**). However, `a` and `b` are not directly linked to each other—they both independently point to the same object. Python doesn't allow linking variables to each other directly.
+
+Now, if we continue with:
+
+```python
+a = 3
+b = a
+a = 'hack'      # b still points to 3
+```
+
+Python creates a new string object `'hack'` and assigns it to `a`. This doesn't affect `b`; it still points to the original object `3`.
+
+If we had instead done:
+
+```python
+b = 'hack'
+```
+
+Only `b` would change; `a` would remain unchanged. This behavior holds even when types don't change:
+
+```python
+a = 3
+b = a
+a = a + 2       # Inters are immutable; a now points to a new object (5), b still points to 3
+```
+
+Here, `a` and `b` both start by referencing `3`. Then `a = a + 2` evaluates to `5`, creating a new object, and `a` now points to `5`. `b` still points to `3`. The original object `3` is unchanged.
+
+This highlights that integers are immutable—you can't modify them in place. You can only create new ones and reassign references.
+
+*In Python, variables are references to objects, not containers of values*. Assigning a new value doesn't alter the original object; it just changes the reference. So, assignment affects only the variable on the left-hand side.
+
+However, with mutable objects and in-place updates, the behavior changes. Let's explore that next.
+
+
+
+For more, refer to the `gc` module in Python's standard library.
+
+**The key point:** Python's memory management is automatic and reliable, even with cycles. It's designed by experts and generally just works.
+
+**Note:** This explanation applies to CPython, the standard Python implementation. Other versions like Jython, IronPython, and PyPy may use different strategies, though the end result—automatic memory cleanup—is the same.
+
+##### Shared References and In-Place Changes
+
+Some operations in Python change objects *in place*, but only for mutable types like lists, dictionaries, and sets. For example, assigning a new value to a list element modifies the list directly, rather than creating a new list.
+
+This matters when dealing with shared references. If two variables reference the same object, an in-place change via one will affect the other. Otherwise, the object may appear to change unexpectedly.
+
+All assignments in Python are reference-based, including function arguments. Let’s revisit lists to illustrate:
+
+```python
+L1 = [2, 3, 4]
+L2 = L1
+```
+
+Here, both `L1` and `L2` point to the same list object. Changing `L1` to a new object:
+
+```python
+L1 = 24
+```
+
+...doesn’t affect `L2`. But modifying the list in place does:
+
+```python
+L1 = [2, 3, 4]		# A mutable object
+L2 = L1			# Shared reference
+L1[0] = 24		# In-place change
+```
+
+Results:
+
+```python
+L1
+[24, 3, 4]
+L2
+[24, 3, 4]
+```
+
+We didn’t reassign `L1` or `L2`, but we *did* modify the shared object. The change is visible through both names.
+
+This behavior only applies to mutable objects that support in-place updates. If you want to avoid it, make a copy:
+
+```python
+L1 = [2, 3, 4]
+L2 = L1[:]		# Copy via slicing
+L1[0] = 24
+```
+
+Now:
+
+```python
+L1
+[24, 3, 4]
+L2
+[2, 3, 4]
+```
+
+The change to `L1` doesn't affect `L2` because they reference different objects.
+
+For non-sequence types like dictionaries and sets, use:
+
+```python
+D2 = D1.copy()
+S2 = set(S1)
+```
+
+To copy any object:
+
+```python
+import copy
+X = copy.copy(Y)		# Shallow copy
+X = copy.deepcopy(Y)		# Deep copy (all nested parts)
+```
+
+We'll explore these topics more in Chapters 8 and 9. For now, remember: mutable objects can be changed in place, and shared references can lead to side effects. If you don't want that, copy the object.

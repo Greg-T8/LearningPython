@@ -66,14 +66,15 @@
       - [Boolean Objects](#boolean-objects)
     - [Numeric Extensions](#numeric-extensions)
   - [6. The Dynamic Typing Interlude](#6-the-dynamic-typing-interlude)
-  - [The Case of the Missing Declaration Statements](#the-case-of-the-missing-declaration-statements)
-    - [Variables, Objects, and References](#variables-objects-and-references)
-      - [Python References for C Programmers](#python-references-for-c-programmers)
-    - [Types Live with Objects, Not Variables](#types-live-with-objects-not-variables)
-    - [Objects are Garbage-Collected](#objects-are-garbage-collected)
-      - [More on Python Garbage Collection](#more-on-python-garbage-collection)
-    - [Shared References](#shared-references)
-      - [Shared References and In-Place Changes](#shared-references-and-in-place-changes)
+    - [The Case of the Missing Declaration Statements](#the-case-of-the-missing-declaration-statements)
+      - [Variables, Objects, and References](#variables-objects-and-references)
+      - [Types Live with Objects, Not Variables](#types-live-with-objects-not-variables)
+      - [Objects are Garbage-Collected](#objects-are-garbage-collected)
+      - [Shared References](#shared-references)
+    - [Dynamic Typing is Everywhere](#dynamic-typing-is-everywhere)
+    - [Type Hinting: Optional, Unused, and Why?](#type-hinting-optional-unused-and-why)
+    - [When References Are "Weak"](#when-references-are-weak)
+  - [7. String Fundamentals](#7-string-fundamentals)
 
 
 ## Part II. Objects and Operations
@@ -2257,7 +2258,7 @@ In Python, we don't declare object types explicitly. In fact, most programs are 
 
 Dynamic typing is the foundation of this flexibility, but it can also confuse newcomers. So before moving on, we’ll briefly explore how it works. We'll also touch on the paradox of type hinting and why it’s often best avoided.
 
-### The Case of the Missing Declaration Statements
+#### The Case of the Missing Declaration Statements
 
 If you're used to statically typed languages like C, C++, or Java, this might seem confusing. So far, we've used variables without declaring their type or even their existence—and it still works. For example, when you write:
 
@@ -2269,7 +2270,7 @@ how does Python know that `a` is an integer? Or what `a` is at all?
 
 These questions lead into Python’s dynamic typing model. In Python, types are determined at runtime, not through prior declarations. You don’t need to declare variables. This becomes clearer when you understand that it’s all about variables, objects, and the connections between them—explained in the next section.
 
-#### Variables, Objects, and References
+##### Variables, Objects, and References
 
 In Python, writing
 
@@ -2326,7 +2327,7 @@ Every object also has two internal header fields:
 2. A **reference counter** tracking how many variables (or other objects) link to it, which determines when it can be reclaimed.
 
 
-##### Python References for C Programmers
+###### Python References for C Programmers
 
 For C programmers, Python references are somewhat like C pointers (memory addresses). In CPython, they’re actually implemented as pointers and can serve similar purposes, especially for mutable objects.
 
@@ -2335,7 +2336,7 @@ However, Python automatically dereferences them when used, so you never work wit
 By not exposing raw pointers, Python avoids a whole class of common C bugs. You can loosely think of Python references as C `void*` pointers that are always automatically followed when used.
 
 
-#### Types Live with Objects, Not Variables
+##### Types Live with Objects, Not Variables
 
 Consider what happens when we assign a variable multiple times:
 
@@ -2362,7 +2363,7 @@ Every object has two header fields:
 
 The reference counter determines when an object’s memory can be reclaimed.
 
-#### Objects are Garbage-Collected
+##### Objects are Garbage-Collected
 
 When you reassign a variable in Python, the object it previously referenced may be discarded if nothing else refers to it.
 
@@ -2392,7 +2393,7 @@ Internally, Python tracks a **reference counter** for every object. When the cou
 
 **The benefit:** you can freely create and replace objects without manually allocating or freeing memory, unlike in C or C++. Python handles cleanup as your program runs.
 
-##### More on Python Garbage Collection
+###### More on Python Garbage Collection
 
 Python's garbage collection mainly uses reference counting. It also includes a cycle detector that reclaims objects involved in circular references. This detector is enabled by default but can be disabled if you're sure your code doesn't create cycles.
 
@@ -2401,7 +2402,7 @@ Both reference counts and the cycle detector handle garbage collection. However,
 Circular references are a known issue in reference-counting systems. Since references are pointers, an object can reference itself or another object that refers back. For example, `L.append(L)` creates a cycle by embedding a list within itself. Similar cycles can happen with attributes in user-defined class instances. These cases are rare but important—such objects never reach a zero reference count, so the cycle detector must handle them.
 
 
-#### Shared References
+##### Shared References
 
 So far, we've looked at what happens when a single variable is assigned to different objects. Now let's add another variable and observe how references work:
 
@@ -2454,7 +2455,7 @@ For more, refer to the `gc` module in Python's standard library.
 
 **Note:** This explanation applies to CPython, the standard Python implementation. Other versions like Jython, IronPython, and PyPy may use different strategies, though the end result—automatic memory cleanup—is the same.
 
-##### Shared References and In-Place Changes
+###### Shared References and In-Place Changes
 
 Some operations in Python change objects *in place*, but only for mutable types like lists, dictionaries, and sets. For example, assigning a new value to a list element modifies the list directly, rather than creating a new list.
 
@@ -2477,8 +2478,8 @@ L1 = 24
 
 ```python
 L1 = [2, 3, 4]		# A mutable object
-L2 = L1			# Shared reference
-L1[0] = 24		# In-place change
+L2 = L1			    # Shared reference
+L1[0] = 24		    # In-place change
 ```
 
 Results:
@@ -2522,8 +2523,160 @@ To copy any object:
 
 ```python
 import copy
-X = copy.copy(Y)		# Shallow copy
+X = copy.copy(Y)		    # Shallow copy
 X = copy.deepcopy(Y)		# Deep copy (all nested parts)
 ```
 
 We'll explore these topics more in Chapters 8 and 9. For now, remember: mutable objects can be changed in place, and shared references can lead to side effects. If you don't want that, copy the object.
+
+###### Shared References and Equality
+
+Python’s garbage collection can be more conceptual than literal for some object types due to internal optimizations like caching. For example:
+
+```python
+x = 99
+x = 'Python'    	# Does 99 get reclaimed?
+```
+
+Even though `x` is reassigned, the object `99` likely isn’t reclaimed. Python caches small integers and strings for reuse, so `99` stays available internally.
+
+Most objects are reclaimed as soon as they’re no longer referenced. For cached types, this doesn’t affect your code—unless you use low-level inspection tools.
+
+Python's reference model allows two ways to test equality:
+
+```python
+L = [1, 2, 3]
+M = L
+L == M     		# Compares values
+True
+L is M    		# Compares identity (same object)
+True
+```
+
+The `==` operator checks if two objects have the same value.
+The `is` operator checks if they’re the same object in memory—useful for detecting shared references.
+
+When the objects are different but have the same value:
+
+```python
+L = [1, 2, 3]
+M = [1, 2, 3]
+L == M
+True
+L is M
+False
+```
+
+But with small immutable types, caching can make `is` return `True`:
+
+```python
+X = 99
+Y = 99
+X == Y
+True
+X is Y    	# Same object due to caching
+True
+```
+
+Though `X` and `Y` were created from separate expressions, Python reuses the same cached object for small integers, so both names point to it.
+
+You can inspect object identity and references with:
+
+```python
+import sys
+id(99) == id(99)             	# True: same object
+sys.getrefcount(99)          	# Very high: 99 is cached/immortal
+sys.getrefcount(2 ** 1000)   	# 1: not cached
+```
+
+In Python 3.12+, some objects are "immortal"—they always exist and aren’t reference-counted in the usual way.
+
+This caching has no impact on program behavior. Since immutable objects can't be changed in place, all references to them behave consistently, even if they point to the same cached object.
+
+It’s just one of Python's runtime optimizations to improve performance.
+
+#### Dynamic Typing is Everywhere
+
+You don’t need to draw diagrams of names and objects to use Python, but doing so can help when you're learning—especially when debugging unexpected behavior with mutable objects and references.
+
+If a mutable object changes unexpectedly after being passed around your code, you're likely seeing the effects of reference-based assignment.
+
+Even if dynamic typing feels abstract now, you’ll eventually find it important. Since Python uses a single assignment model based on references, understanding it helps across many areas: assignment, function arguments, loops, imports, class attributes, and more.
+
+The benefit: Python’s dynamic typing reduces the amount of code you need to write. It’s also the foundation of Python’s polymorphism—code that works with different types seamlessly.
+
+Because Python doesn’t enforce strict types, it remains concise, flexible, and adaptable as your code evolves. When used effectively, dynamic typing makes it easier to build systems that handle new needs without major rewrites.
+
+#### Type Hinting: Optional, Unused, and Why?
+
+You may have seen type declarations like these in modern Python code:
+
+```python
+a: int
+b: int = 0
+c: list[int] = [1, 2, 3]
+```
+
+This is **type hinting**—a syntax that adds type information using colons and type expressions. It can also use advanced types from the `typing` module (e.g., `Iterable`, `Union`, `Any`), and Python 3.12 introduced the `type` statement for type aliases:
+
+```python
+type Data = list[float]
+Data = list[float]
+```
+
+However, type hints are **completely optional**. Python ignores them at runtime and does not enforce them:
+
+```python
+>>> a
+NameError: name 'a' is not defined
+
+>>> b = 'hack'
+>>> c = 'code'
+>>> b, c
+('hack', 'code')
+```
+
+Type hints can also appear in function definitions, repurposing an older feature called *function annotations*:
+
+```python
+def func(a: int, b: list[str]) -> float:
+    return 'anything' + a + b
+```
+
+Despite the type hints, this function runs with strings just fine:
+
+```python
+func('You', 'Want')
+'anythingYouWant'
+```
+
+In short:
+
+* Type hints don’t affect how Python runs.
+* They don’t constrain types or enforce correctness.
+* They serve as optional documentation or for external tools like `mypy`.
+* Python doesn’t require, use, or plan to use them.
+
+Even performance-focused implementations like PyPy ignore type hints.
+
+Type hinting contradicts Python’s core principle of **dynamic typing**. Adding static declarations to a dynamic language introduces complexity without functional gain—especially for beginners.
+
+This book recommends avoiding type hints until you’re fully comfortable with Python’s fundamentals. When and if you explore them, consult the official documentation.
+
+Ultimately, Python remains dynamically typed, and that’s one of its greatest strengths. Let’s hope it stays that way.
+
+#### When References Are "Weak"
+
+The term *weak reference* in Python doesn’t imply weakness in quality—it refers to a special kind of reference handled by the `weakref` module.
+
+A **weak reference** points to an object without preventing it from being garbage collected. If only weak references remain, the object can be reclaimed. When that happens, the weak references are notified and can react accordingly.
+
+This is useful for things like caches. A normal reference in a cache would keep an object in memory forever. But with a weak reference, the object can be freed if it’s no longer used elsewhere. The cache can then either return `None` or trigger a callback when trying to access the now-gone object.
+
+**Example use case:** caching large objects used primarily in other parts of the program.
+
+Not all objects support weak references. Some require extra setup using object-oriented programming techniques introduced later in the book.
+
+Ultimately, weak references are just an advanced extension of Python’s reference model. For more, check the `weakref` section in the standard library docs.
+
+### 7. String Fundamentals
